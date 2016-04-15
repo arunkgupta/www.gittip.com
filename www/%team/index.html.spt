@@ -1,0 +1,113 @@
+"""Show information about a single Team. It might be your team!
+"""
+from collections import OrderedDict
+
+from aspen import Response
+from gratipay.utils import excerpt_intro, get_team, markdown
+
+[-----------------------------------------------------------------------------]
+
+team = get_team(state)
+banner = name = team.name
+suppress_sidebar = not(team.is_approved or user.ADMIN)
+is_team_owner = not user.ANON and team.owner == user.participant.username
+
+[-----------------------------------------------------------------------------]
+{% extends "templates/team-base.html" %}
+
+{% block head %}
+    <link rel="payment" type="text/html" title="Give weekly gift on Gratipay"
+          href="https://gratipay.com/{{ team.slug }}/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="og:url" content="https://gratipay.com/{{ team.slug }}/" />
+    <meta name="og:type" content="profile" />
+    <meta name="og:title" content="{{ team.name }}" />
+    <meta name="og:description" content="{{ excerpt_intro(team.product_or_service) }}" />
+    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
+{% endblock %}
+
+{% block content %}
+    <p>
+
+    <a href="{{ team.review_url }}">
+        {% if team.status == 'approved' %}
+        <span class="status-icon approved">&#xe008;</span> {{ _("Approved") }}
+        {% elif team.status == 'unreviewed' %}
+        <span class="status-icon unreviewed">&#xe009;</span> {{ _("Under Review") }}
+        {% elif team.status == 'rejected' %}
+        <span class="status-icon rejected">&#xe010;</span> {{ _("Rejected") }}
+        {% endif %}
+    </a> |
+
+    <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
+
+    {% if team.onboarding_url %}
+    | <a href="{{ team.onboarding_url }}">{{ _("Onboarding") }}</a>
+    {% endif %}
+
+    {% if team.todo_url %}
+    | <a href="{{ team.todo_url }}">{{ _("To-do") }}</a>
+    {% endif %}
+
+    {% if user.ADMIN or is_team_owner %}
+    |{{ _( "{a} Edit team {_a}"
+          , a='<a href="./edit">'|safe
+          , _a='</a>'|safe
+           ) }}
+    {% endif %}
+
+    {% if user.ADMIN or not is_team_owner %}
+    | {{ _( "owned by {a}~{owner}{_a}"
+          , a=('<a href="/~{}/">'.format(team.owner))|safe
+          , owner=team.owner
+          , _a='</a>'|safe
+           ) }}
+    {% endif %}
+
+    </p>
+
+    <div class="statement profile-statement">
+        {{ markdown.render(team.product_or_service) }}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>$(document).ready(Gratipay.payments.init);</script>
+{% if user.ADMIN %}
+<script>
+    $(document).ready(function()
+    {
+        console.log('hey!');
+
+        function error(a,b,c)
+        {
+            console.log(a,b,c);
+            alert("Failed!");
+        }
+
+        $('#sidebar #status-knob').submit(function(e)
+        {
+            console.log('bee!');
+            var status = $('select[name=status]', this).val();
+
+            function success(d)
+            {
+                Gratipay.notification('Team status changed to "' + d.status + '".', 'success');
+            }
+
+            jQuery.ajax({ url: $(this).attr('action')
+                        , type: "POST"
+                        , dataType: "json"
+                        , data: {status: status}
+                        , success: success
+                        , error: error
+                         })
+
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+</script>
+{% endif %}
+{{ super() }}
+{% endblock %}

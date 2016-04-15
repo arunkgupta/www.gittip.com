@@ -3,31 +3,29 @@ from aspen import Response
 [-----------------------------------------------------------------------------]
 
 if user.ANON:
-    request.redirect('/')
+    website.redirect('/')
 
-if POST:
+if request.method == 'POST':
     user.sign_out(response.headers.cookie)
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        raise Response(200)
 
     if 'back_to' in request.body:
         back_to = request.body['back_to']
     else:
         back_to = request.headers.get('referer', '/')
 
-    response.redirect(back_to)
+    website.redirect(back_to, response=response)
 
+title = _("Sign Out")
 [-----------------------------------------------------------------------------]
 {% extends "templates/base.html" %}
-{% block heading %}
-    <h2 class="top"><span>Sign out</span></h2>
-{% endblock %}
-
-{% block box %}
-    <div class="as-content">
-        <h1>Are you sure you wish to sign out?</h1>
-        <form id="sign-out" method="POST">
-            <input name="back_to" type="hidden" value="/" />
-            <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
-            <button type="submit">Yes!</button>
-        </form>
-    </div>
+{% block content %}
+    <p>{{ _("Are you sure you wish to sign out?") }}</p>
+    <form id="sign-out" method="POST">
+        <input name="back_to" type="hidden" value="/" />
+        <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+        <button type="submit">{{ _("Yes!") }}</button>
+    </form>
 {% endblock %}

@@ -1,0 +1,1453 @@
+# Translations template for PROJECT.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# 
+# Translators:
+# Changaco <changaco@changaco.oy.lc>, 2014-2015
+# Peter Tillemans <pti@snamellit.com>, 2014-2015
+# Sidney Gijzen, 2014
+# Sidney Gijzen, 2014-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Gratipay\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Language-Team: Dutch (http://www.transifex.com/gratipay/gratipay/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "1.0 Payout: Approved!"
+msgstr ""
+
+msgid ""
+"We've approved your application for a payout of your Gratipay 1.0 balance. "
+"Watch for that during our next weekly payment cycle."
+msgstr ""
+
+msgid "Thanks for using Gratipay! :-)"
+msgstr ""
+
+msgid "Something not right? Reply to this email for help."
+msgstr "Is er iets mis? Beantwoord deze mail voor hulp."
+
+msgid "Greetings!"
+msgstr "Goedendag!"
+
+msgid "Oh no! A problem supporting {0}!"
+msgstr "O nee! Een probleem met {0}!"
+
+msgid ""
+"We tried to charge your credit card {0} today, to fund your ongoing support "
+"for {1}, but the charge failed with this message:"
+msgstr "We hebben geprobeerd om je steun voor {1} te met je kredietkaart {0} te verwerken, maar het faalde met deze melding: "
+
+msgid "{0} and {n} other"
+msgid_plural "{0} and {n} others"
+msgstr[0] "{0} en {n} andere"
+msgstr[1] "{0} en {n} anderen"
+
+msgid "Fix Credit Card"
+msgstr "Fix kredietkaart"
+
+msgid "Follow this link to fix your credit card:"
+msgstr "Volg deze link om je kredietkaart aan te passen:"
+
+msgid "Thanks for supporting {0}!"
+msgstr "Bedankt om {0} te steunen!"
+
+msgid ""
+"We charged your credit card {0} today, to fund your ongoing support for {1}."
+" Thanks for using Gratipay!"
+msgstr "We hebben je kredietkaart {0} gebruikt om je {1} te blijven steunen. Bedankt om Gratipay te gebruiken!"
+
+msgid "View Receipt"
+msgstr "Bekijk Ontvangstbewijs"
+
+msgid "Follow this link to view your receipt:"
+msgstr "Volg deze link voor je ontvangstbewijs:"
+
+msgid "Follow this link if you want to view or modify your payments:"
+msgstr "Volg deze link als je je betaling wilt zien of veranderen:"
+
+msgid "Connect to {0} on Gratipay?"
+msgstr "Verbind met {0} op Gratipay?"
+
+msgid "1.0 Payout: Rejected"
+msgstr ""
+
+msgid ""
+"We've rejected your application for a payout of your Gratipay 1.0 balance, "
+"because we couldn't determine what product or service you were offering for "
+"which people were paying you on Gratipay. Please reply if you would like to "
+"discuss this further."
+msgstr ""
+
+msgid "Team Application Approved!"
+msgstr ""
+
+msgid ""
+"We've approved your application for the '{team}' Team on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+msgid ""
+"We've approved your application for the '{team}' Team on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr ""
+
+msgid "Team Application Rejected"
+msgstr ""
+
+msgid ""
+"We've rejected your application for the '{team}' Team on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+msgid ""
+"We've rejected your application for the '{team}' Team on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr ""
+
+msgid ""
+"We've received a request to connect {0} to the {1} account on Gratipay. "
+"Sound familiar?"
+msgstr "We hebben een aanvraag ontvangen om {0} met de {1} account op Gratipay te verbinden. Klinkt dit bekend?"
+
+msgid "Yes, proceed!"
+msgstr "Ja, doe maar!"
+
+msgid "Follow this link to finish connecting your email:"
+msgstr "Volg deze link om de procedure af te ronden voor het koppelen van uw emailadres:"
+
+msgid "Connecting {0} to {1} on Gratipay."
+msgstr "{0} met {1} verbinden op Gratipay"
+
+msgid ""
+"We are connecting {0} to the {1} account on Gratipay. This is a notification"
+" sent to {2} because that is the primary email address we have on file."
+msgstr "We hebben {0} met de {1} account verbonden op Gratipay. Dit is een notificatie voor {2} omdat dit het primaire email adres dat we geregistreerd hebben."
+
+msgid "You've consumed your quota of requests, you can try again in {0}."
+msgstr "Je hebt je quota aanvragen opgebruikt, probeer opnieuw over {0}."
+
+msgid "You're making requests too fast, please try again later."
+msgstr "Je maakt te snel aanvragen, probeer later nog eens."
+
+msgid "{0} returned an error, please try again later."
+msgstr "{0} resulteert in een foutmelding, probeer het later nog een keer."
+
+msgid "There doesn't seem to be a user named {0} on {1}."
+msgstr "Er is geen gebruiker bekend met de naam {0} op {1}."
+
+msgid "You need to log in to access this page."
+msgstr "Je moet inloggen om deze pagina te bekijken."
+
+msgid "You are not authorized to access this page."
+msgstr "U bent niet gemachtigd om deze pagina te bekijken."
+
+msgid "Forbidden"
+msgstr "Verboden"
+
+msgid "Not Found"
+msgstr "Niet gevonden"
+
+msgid "Too Many Requests"
+msgstr "Teveel verzoeken"
+
+msgid "Internal Server Error"
+msgstr "Interne server fout"
+
+msgid "Upstream Error"
+msgstr "Upstream fout"
+
+msgid "Your last PayPal payout failed!"
+msgstr ""
+
+msgid "Your credit card has failed!"
+msgstr "Uw kredietkaart heeft gefaald!"
+
+msgid "Fix your card"
+msgstr "Controleer Uw kaart"
+
+msgid "Your credit card is about to expire!"
+msgstr "Uw kredietkaart is bijna verlopen!"
+
+msgid "Update card"
+msgstr "Vernieuw kaart"
+
+msgid "Your account does not have an associated email address."
+msgstr "U hebt nog geen e-mailadres toegewezen aan uw account."
+
+msgid "Add an email address"
+msgstr "Voeg een e-mailadres toe"
+
+msgid "Overview"
+msgstr "Overzicht"
+
+msgid "Stats"
+msgstr "Stats"
+
+msgid "Pricing"
+msgstr "Kosten"
+
+msgid "Contact Us"
+msgstr "Contact"
+
+msgid "Payments"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
+
+msgid "Do Not Track"
+msgstr "Do Not Track"
+
+msgid "Terms of Service"
+msgstr "Service voorwaarden"
+
+msgid "Privacy Policy"
+msgstr "Privacy beleid"
+
+msgid "Disclosure"
+msgstr "Bekendmaking"
+
+msgid "Hall of Fame (Legacy)"
+msgstr ""
+
+msgid "Basic Info"
+msgstr "Basisinformatie"
+
+msgid "Features"
+msgstr "Functies"
+
+msgid "Policies"
+msgstr "Richtlijnen"
+
+msgid "Security"
+msgstr "Veiligheid"
+
+msgid "+ Add"
+msgstr "+ Toevoegen"
+
+msgid "Disconnect"
+msgstr "Afsluiten"
+
+msgid "Search"
+msgstr "Zoeken"
+
+msgid "wk"
+msgstr "wk"
+
+msgid "Sign out"
+msgstr ""
+
+msgid ""
+"{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available "
+"{a2}indefinitely{_a}{_nowrap}."
+msgstr ""
+
+msgid ""
+"{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
+msgstr ""
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "GitHub"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Communities"
+msgstr "Gemeenschappen"
+
+msgid "Join Communities"
+msgstr "Vervoeg gemeenschappen"
+
+msgid "Social Profiles"
+msgstr "Sociale Profielen"
+
+msgid "Other Receiving Options"
+msgstr "Andere ontvangst opties"
+
+msgid "Other Giving Options"
+msgstr "Andere gift opties"
+
+msgid "Save"
+msgstr "Bewaar"
+
+msgid "Cancel"
+msgstr "Annuleer"
+
+msgid "Delete"
+msgstr "Verwijderen"
+
+msgid "Edit"
+msgstr "Verander"
+
+msgid "Team"
+msgstr "Team"
+
+msgid "Amount ($)"
+msgstr "Bedrag ($)"
+
+msgid "Due ($)"
+msgstr ""
+
+msgid "First Set"
+msgstr "Eerste serie"
+
+msgid "{0} ago"
+msgstr ""
+
+msgid "Previous"
+msgstr "Vorige"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "First"
+msgstr "Eerste"
+
+msgid "Last"
+msgstr "Laatste"
+
+msgid "Profile"
+msgstr "Profiel"
+
+msgid "Statement"
+msgstr "Afschrift"
+
+msgid "Tell us how you're making the world better."
+msgstr "Vertel ons iets over hoe jij bijdraagt aan een betere wereld."
+
+msgid ""
+"Gratipay allows you to have profile statements in multiple languages. Use "
+"the selector below to switch between them."
+msgstr "Gratipay maakt het mogelijk om je profiel verklaringen te vertalen naar meedere talen. Gebruik onderstaande knop om te wisselen tussen de verschillende vertalingen."
+
+msgid "Markdown supported."
+msgstr "Markdown ondersteund."
+
+msgid "What is markdown?"
+msgstr "Wat is markdown?"
+
+msgid "View source."
+msgstr "Bekijk bron."
+
+msgid "Credit Card"
+msgstr "Kredietkaart"
+
+msgid "PayPal"
+msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Giving"
+msgstr "Geven"
+
+msgid "hidden"
+msgstr "verborgen"
+
+msgid "Taking"
+msgstr ""
+
+msgid "Joined"
+msgstr "Lid geworden"
+
+msgid "History"
+msgstr "Geschiedenis"
+
+msgid "Emails"
+msgstr ""
+
+msgid "Routes"
+msgstr ""
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Events"
+msgstr "Gebeurtenissen"
+
+msgid "Sign in"
+msgstr "Log in"
+
+#, python-format
+msgid "Only {0}% of active users also {1}support Gratipay{2}."
+msgstr "Maar {0}% operationele gebruikers {1}ondersteunen ook Gratipay{2}."
+
+#, python-format
+msgid "{0}% of active users also {1}support Gratipay{2}."
+msgstr "{0}% operationele gebruikers {1}ondersteunen ook Gratipay{2}."
+
+msgid "Will you help us reach {0}%?"
+msgstr "Wil je ons helpen om {0}% te bereiken?"
+
+msgid "Will you join them?"
+msgstr "Wil je hen vervoegen?"
+
+msgid "Other"
+msgstr "Andere"
+
+msgid "No thanks"
+msgstr "Nee, bedankt"
+
+msgid "We fund Gratipay solely through your voluntary payments!"
+msgstr "Wij financieren Gratipay uitsluitend door uw vrijwillige bijdragen! "
+
+msgid "Learn more"
+msgstr "Leer meer"
+
+msgid "Receiving"
+msgstr "Ontvangt"
+
+msgid "Sharing"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
+msgid "Teams"
+msgstr "Teams"
+
+msgid "{sign_in}{br}to give to{br}{team}"
+msgstr ""
+
+msgid "You Give"
+msgstr ""
+
+msgid "per week"
+msgstr "per week"
+
+msgid "Give to {0}"
+msgstr ""
+
+msgid "Stop Giving"
+msgstr "Stop met geven"
+
+msgid ""
+"Back your payment with a {0}credit card{1} to make sure it goes through!"
+msgstr "Ondersteun je betaling met een {0}credit card{1} om er zeker van te zijn dat het aankomt!"
+
+msgid "1.0"
+msgstr ""
+
+msgid "Status of Your 1.0 Payout"
+msgstr ""
+
+msgid "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
+msgstr ""
+
+msgid ""
+"Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
+"threshold of {minimum}{_b}."
+msgstr ""
+
+msgid "You do not have a balance left over from Gratipay 1.0."
+msgstr ""
+
+msgid ""
+"You're all set! But ... can you help us spread the word and tell your "
+"friends to check here, too? Thanks! :)"
+msgstr ""
+
+msgid "Your balance is {b}{balance}{_b}."
+msgstr ""
+
+msgid "You are {b}scheduled for a payout{_b} during our next weekly cycle."
+msgstr ""
+
+msgid ""
+"You should be all set! But ... can you help us spread the word and tell your"
+" friends to check here, too? Thanks! :)"
+msgstr ""
+
+msgid ""
+"You have applied for a payout. We will review your account and contact you "
+"at {b}{email}{_b} within the next week."
+msgstr ""
+
+msgid ""
+"Meanwhile ... can you help us spread the word and tell your friends to check"
+" here, too? Thanks! :)"
+msgstr ""
+
+msgid ""
+"You have applied for a payout, and we have rejected your application. You "
+"should have received a notification at {b}{email}{_b} from "
+"{a}support@gratipay.com{_a}."
+msgstr ""
+
+msgid "Apply for a payout"
+msgstr ""
+
+msgid ""
+"Please {a}connect a PayPal account{_a} and then return here to apply for "
+"payout."
+msgstr ""
+
+msgid ""
+"P.S. You were receiving {b}{receiving} per week from one person{_b} under "
+"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
+"for a new Team{_a} instead of a one-time payout."
+msgid_plural ""
+"P.S. You were receiving {b}{receiving} per week from {n} people{_b} under "
+"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
+"for a new Team{_a} instead of a one-time payout."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "Under Review"
+msgstr ""
+
+msgid "Rejected"
+msgstr ""
+
+msgid "Payments{br}and Payroll{br}for Open Work"
+msgstr ""
+
+msgid "Read more"
+msgstr ""
+
+msgid "Welcome to Gratipay!"
+msgstr ""
+
+msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
+msgstr ""
+
+msgid "Continue to explore our Teams, or {a}read more about us{_a}."
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "Apply for a New Team"
+msgstr "Aanmelden voor een nieuw team"
+
+msgid "created {ago}"
+msgstr ""
+
+msgid "owned by {a}{owner}{_a}"
+msgstr ""
+
+msgid "You must sign in to apply for a new Team."
+msgstr ""
+
+msgid "You must have a verified email address to apply for a new Team."
+msgstr ""
+
+msgid "You must attach a PayPal account to apply for a new Team."
+msgstr ""
+
+msgid "Apply"
+msgstr "Aanmelden"
+
+msgid "Thanks! Your public team page is:"
+msgstr ""
+
+msgid "And your public review ticket is:"
+msgstr ""
+
+msgid ""
+"You can watch and participate in our review process there. We will send a "
+"notification to {email} when we finish our review."
+msgstr ""
+
+msgid "Thanks for applying!"
+msgstr ""
+
+msgid "Team Name"
+msgstr "Team naam"
+
+msgid ""
+"At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
+"periods (.), comma (,) and whitespace."
+msgstr ""
+
+msgid "Image"
+msgstr ""
+
+msgid ""
+"PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
+" 48 x 48 (with original saved for later)."
+msgstr ""
+
+msgid "Product or Service"
+msgstr "Product of service"
+
+msgid "What product or service does your Team provide?"
+msgstr ""
+
+msgid "Homepage"
+msgstr "Home pagina"
+
+msgid "What is the customer-facing web page for your product or service?"
+msgstr ""
+
+msgid "Self-onboarding Documentation URL"
+msgstr ""
+
+msgid "Where can people find instructions on how to do your work for you?"
+msgstr ""
+
+msgid "To-do URL"
+msgstr ""
+
+msgid "Where can people find a list of available work to do for your Team?"
+msgstr ""
+
+msgid "Agreements"
+msgstr ""
+
+msgid "I agree to have my application {0}publicly reviewed{1}."
+msgstr ""
+
+msgid "I agree to be responsible for {0}payroll{1}."
+msgstr ""
+
+msgid "I agree to the {0}terms of service{1}."
+msgstr ""
+
+msgid "Migration of Payments"
+msgstr ""
+
+msgid ""
+"The {ntips} weekly tips totalling {receiving} that previously were directed "
+"to your ~{username} user account under Gratipay 1.0 will be converted into "
+"weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
+"pending approval of your application."
+msgstr ""
+
+msgid "Search Gratipay"
+msgstr "Doorzoek Gratipay"
+
+msgid "Go"
+msgstr "Start"
+
+msgid "Looking for a specific user of a social network?"
+msgstr "Ben je op zoek naar één specifieke gebruiker van een sociaal netwerk?"
+
+msgid "{0} on {1}"
+msgstr ""
+
+msgid "Found a matching username"
+msgid_plural "Found matching usernames"
+msgstr[0] "De volgende overeenkomende gebruikersnaam is gevonden"
+msgstr[1] "De volgende overeenkomende gebruikersnamen zijn gevonden"
+
+msgid "Found a matching user statement"
+msgid_plural "Found matching user statements"
+msgstr[0] "De volgende overeenkomende gebruikersverklaring is gevonden"
+msgstr[1] "De volgende overeenkomende gebruikersverklaringen zijn gevonden"
+
+msgid "Sorry, we didn't find anything matching your query."
+msgstr "Sorry, we hebben niks gevonden wat voldoet aan je zoekopdracht. "
+
+msgid "Sign Out"
+msgstr "Uitloggen"
+
+msgid "Are you sure you wish to sign out?"
+msgstr "Ben je zeker dat je wil uitloggen?"
+
+msgid "Yes!"
+msgstr "Ja!"
+
+msgid "Onboarding"
+msgstr ""
+
+msgid "To-do"
+msgstr ""
+
+msgid "{a} Edit team {_a}"
+msgstr ""
+
+msgid "owned by {a}~{owner}{_a}"
+msgstr ""
+
+msgid "Please sign in first"
+msgstr "Logt u alstublieft eerst in"
+
+msgid "Payment changed to {0} per week. "
+msgstr "Betaling is veranderd naar {0} per week."
+
+msgid "Thank you so much for supporting {0}!"
+msgstr "Hartelijk dank voor het steunen van {0}!"
+
+msgid "You have canceled your payment to {0}."
+msgstr ""
+
+msgid "You can't edit a closed team."
+msgstr ""
+
+msgid "You can't edit a rejected team."
+msgstr ""
+
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr ""
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr ""
+
+msgid "Edit your team"
+msgstr ""
+
+msgid "Modify"
+msgstr ""
+
+msgid "User not found."
+msgstr "Gebruiker is niet gevonden."
+
+msgid "That's not a valid number"
+msgstr "Dat is geen geldig nummer"
+
+msgid "A team can't take from itself"
+msgstr "Een team kan geen opbrengsten van zichzelf ontvangen"
+
+msgid ""
+"You're only allowed to add or remove members, you can't set their takes to "
+"specific amounts."
+msgstr "U bent alleen gemachtigd om leden toe te voegen of te verwijderen. Het is niet mogelijk om een specifiek bedrag aan opbrengsten aan een lid toe te wijzen. "
+
+msgid "Are you sure you want to remove {0} from this team?"
+msgstr "Weet je zeker dat je {0} uit het team wilt verwijderen?"
+
+msgid "{0} has been removed from the team."
+msgstr "{0} is uit het team verwijderd."
+
+msgid "{0} is already a member of this team."
+msgstr "{0} is al lid van dit team."
+
+msgid "{0} has been added to the team."
+msgstr "{0} is aan het team toegevoegd."
+
+msgid "Are you sure you want to leave this team?"
+msgstr "Weet je zeker dat je dit team wilt verlaten?"
+
+msgid "Your take is now {0} (you can't go higher this week)."
+msgstr "Uw deel van de opbrengst is {0} (het is niet mogelijk om deze week meer te ontvangen)."
+
+msgid "Your take is now {0}."
+msgstr "Uw deel van de opbrengst is {0}."
+
+msgid "Team Members"
+msgstr "Teamleden"
+
+msgid "Updating…"
+msgstr "Bijwerken..."
+
+msgid "Last{0} Week ($)"
+msgstr "Afgelopen{0} week ($)"
+
+msgid "This{0} Week ($)"
+msgstr "Deze{0} week ($)"
+
+msgid "Team{0} Balance ($)"
+msgstr "Team{0} balans ($)"
+
+msgid "This{0} Week (%)"
+msgstr "Deze{0} week (%)"
+
+msgid "Enter a Gratipay username"
+msgstr "Geef een Gratipay gebruikersnaam op"
+
+msgid "Add"
+msgstr "Toevoegen"
+
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr ""
+
+msgid "Dollars Received Per Week"
+msgstr "Dollar ontvangen per week"
+
+msgid "weeks"
+msgstr "weken"
+
+msgid "Number of Payments Per Week"
+msgstr ""
+
+msgid "Payments Received, by Number of Payments"
+msgstr ""
+
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
+
+msgid "About"
+msgstr "Omtrent"
+
+msgid "Welcome!"
+msgstr ""
+
+msgid ""
+"Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} Teams{_b} "
+"and about {b}{nusers} ~users{_b}."
+msgstr ""
+
+msgid ""
+"On average, ~users who give payments on Gratipay give {b}{amount} to one "
+"Team{_b}."
+msgid_plural ""
+"On average, ~users who give payments on Gratipay give {b}{amount} each to "
+"{number} Teams{_b}."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Gratipay has processed about {b}{total}{_b} over {b}{age}+ years{_b}."
+msgstr ""
+
+msgid "{b}{escrow}{_b} is escrowed within Gratipay."
+msgstr ""
+
+msgid "The Delpan Incident"
+msgstr "Het Delpan incident"
+
+msgid "Sign In"
+msgstr "Log in"
+
+msgid "1.0 Payout Review"
+msgstr ""
+
+msgid "Fraud Review Dashboard"
+msgstr "Fraude controle dashboard"
+
+msgid "Transfer?"
+msgstr ""
+
+msgid "Please Confirm"
+msgstr "Bevestigen alstublieft"
+
+msgid "{0} is connected to {1} on Gratipay."
+msgstr "{0} is verbonden met {1} op Gratipay."
+
+msgid "Transfer it to your ~{username} account?"
+msgstr ""
+
+msgid "How the accounts are now"
+msgstr "Huidige staat van de account"
+
+msgid "Gives"
+msgstr "Geeft"
+
+msgid "Takes"
+msgstr ""
+
+msgid "How the accounts will be after the transfer"
+msgstr "Staat van de account na de overboeking"
+
+msgid "Abandoned:"
+msgstr "Verlaten:"
+
+msgid "Transfer it?"
+msgstr "Overmaken?"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "Friend Finder"
+msgstr "Vriendenzoeker"
+
+msgid "You have {n} friend on {0}."
+msgid_plural "You have {n} friends on {0}."
+msgstr[0] "Je hebt {0} vriend op {0}."
+msgstr[1] "Je hebt {n} vrienden op {0}."
+
+msgid ""
+"Note: privacy settings may prevent Gratipay from seeing some of your {0} "
+"friends."
+msgstr "Opmerking: privacy instellingen kunnen Gratipay verhinderen een aantal van je {0} vrienden te zien."
+
+msgid "Please refresh your {0} connection"
+msgstr "Ververs je {0} verbinding, alstublieft."
+
+msgid "to find your friends from there."
+msgstr "om je vrienden van daar te vinden."
+
+msgid "Sign in with {0}"
+msgstr "Log in met {0}"
+
+msgid "Connect your {0} account"
+msgstr "Verbind uw {0} account"
+
+msgid "No friends found."
+msgstr "Geen vrienden gevonden."
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "On Gratipay?"
+msgstr "Op Gratipay?"
+
+msgid "Failure"
+msgstr "Mislukt"
+
+msgid "Are you really an administrator of the {0} team?"
+msgstr "Bent u echt de administrator van het {0} team?"
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone who isn't an administrator of the {1} team. Please sign out and "
+"{2}try again{3}."
+msgstr "Uw poging om deze account te bemachtingen is mislukt, omdat u bent ingelogd op {0} als iemand die geen administrator is van het {1} team. Logt u alstublieft uit en {2}probeer het opnieuw{3}."
+
+msgid "Are you really {0}?"
+msgstr "Bent u echt {0}?"
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone else. Please sign out and {1}try again{2}."
+msgstr "Uw poging om deze account te bemachtigen is mislukt, omdat u bent ingelogd op {0} als iemand anders. Logt u alstublieft uit en {1}probeer het opnieuw{2}."
+
+msgid "{0} is a private team"
+msgstr "{0} is een privé team"
+
+msgid "{0} is a big team"
+msgstr "{0} is een groot team"
+
+msgid "{0} is a team with {n} public member"
+msgid_plural "{0} is a team with {n} public members"
+msgstr[0] "{0} is een team met {n} publiek lid"
+msgstr[1] "{0} is een team met {n} publieke leden"
+
+msgid "A Lot"
+msgstr "Veel"
+
+msgid "{0} has not joined Gratipay."
+msgstr "{0} is geen lid geworden van Gratipay."
+
+msgid ""
+"Are you an administrator of this {0} team account? Connect it to your "
+"Gratipay account."
+msgstr "Bent u een administrator van dit {0} team account? Verbind het met uw Gratipay account."
+
+msgid "Connect team account"
+msgstr "Verbind het team account"
+
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr "Bent u dit? U kunt lid worden van Gratipay met enkele muisklikken:"
+
+msgid "Join Gratipay"
+msgstr "Word lid van Gratipay"
+
+msgid "Is this yours? Connect it to your Gratipay account."
+msgstr "Is dit van u? Verbind het aan uw Gratipay account."
+
+msgid "Connect"
+msgstr "Verbinden"
+
+msgid "What is Gratipay?"
+msgstr "Wat is Gratipay?"
+
+msgid "Gratipay provides payments and payroll for open work."
+msgstr "Gratipay voorziet in betalingen en lonen voor open werk."
+
+msgid "Member"
+msgstr ""
+
+msgid "Status"
+msgstr "Status"
+
+msgid "accepts gifts"
+msgstr "donaties accepteren"
+
+msgid "hasn't joined Gratipay yet"
+msgstr "is nog geen lid geworden van Gratipay"
+
+msgid "You must sign in to apply for a new team."
+msgstr "U moet inloggen om u aan te melden bij een nieuw team."
+
+msgid "You must have a verified email address to apply for a new team."
+msgstr "U moet in het bezit zijn van een geverifieerd emailadres om u te kunnen aanmelden voor een nieuw team. "
+
+msgid "You must attach a PayPal account to apply for a new team."
+msgstr ""
+
+msgid "How are you applying for a team!?"
+msgstr "Hoe meldt u zich aan voor een team!?"
+
+msgid "Sorry, you must agree to have your application publicly reviewed."
+msgstr ""
+
+msgid "Sorry, you must agree to be responsible for payroll."
+msgstr ""
+
+msgid "Sorry, you must agree to the terms of service."
+msgstr ""
+
+msgid "Sorry, your team name is invalid."
+msgstr ""
+
+msgid "Sorry, there is already a team using '{}'."
+msgstr "Sorry, er is al een team dat '{}' gebruikt."
+
+msgid "Identity Verification"
+msgstr "Identiteits controle"
+
+msgid "Invalid date of birth."
+msgstr "Geboortedatum is ongeldig."
+
+msgid "Unable to verify your identity"
+msgstr "Het is niet gelukt om uw identiteit te verifiëren"
+
+msgid ""
+"Your identity is verified, which means you may add a {0}bank account{1}."
+msgstr "Uw identiteit is geverifieerd. U mag nu een {0}bankrekening{1} toevoegen."
+
+msgid "Your Legal Name"
+msgstr "Uw officiele naam"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Address (second line)"
+msgstr "Adres (tweede regel)"
+
+msgid "City"
+msgstr "Stad"
+
+msgid "State or Province"
+msgstr "Staat of Provincie"
+
+msgid "ZIP or Postal Code"
+msgstr "ZIP of postcode"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "non-US?"
+msgstr "Buiten US?"
+
+msgid "Contact Phone Number"
+msgstr "Contact telefoonnummer"
+
+msgid "Date of Birth"
+msgstr "Geboortedatum"
+
+msgid "YYYY-MM-DD"
+msgstr "YYYY-MM-DD"
+
+msgid "Last four SSN digits"
+msgstr "Laatste vier SSN nummers"
+
+msgid "(Not required)"
+msgstr "(Niet verplicht)"
+
+msgid "You don't have a profile statement in this language yet."
+msgstr "Je hebt nog geen profiel verklaring in deze taal."
+
+msgid "You haven't saved your changes, are you sure you want to discard them?"
+msgstr "Je hebt je veranderingen niet opgeslagen, weet je het zeker dat je deze wilt negeren?"
+
+msgid "with {n} other"
+msgid_plural "with {n} others"
+msgstr[0] "met {n} andere"
+msgstr[1] "met {n} anderen"
+
+msgid "Invalid team slug."
+msgstr ""
+
+msgid "Your privacy setting has been changed."
+msgstr "Uw privacy instellingen zijn gewijzigd."
+
+msgid "Primary"
+msgstr "Primair"
+
+msgid "Unverified"
+msgstr "Niet geverifieerd"
+
+msgid "Remove"
+msgstr "Verwijderen"
+
+msgid "Resend"
+msgstr ""
+
+msgid "Set as primary"
+msgstr "Stel in als primair"
+
+msgid "Add email address"
+msgstr "Voeg een e-mailadres toe"
+
+msgid "Notifications"
+msgstr "Notificaties"
+
+msgid "Send me notifications via email:"
+msgstr "Stuur me notificaties per mail:"
+
+msgid "When my credit card is charged:"
+msgstr "Wanneer mijn kredietkaart wordt aangerekend."
+
+msgid "if the charge fails"
+msgstr "als de aanrekening faalt"
+
+msgid "if the charge succeeds"
+msgstr "als de aanrekening lukt"
+
+msgid "Invalid email address."
+msgstr "Ongeldig e-mailadres"
+
+msgid "A verification email has been sent to {0}."
+msgstr "Een verificatie e-mail is verzonden naar {0}."
+
+msgid "You have already added and verified this address."
+msgstr "U hebt dit e-mailadres al toegevoegd en geverifieerd."
+
+msgid "Please Sign In"
+msgstr "Logt u alstublieft in"
+
+msgid "Sign in to finish connecting your email."
+msgstr "Log in om de procedure af te ronden voor het koppelen van uw e-mailadres."
+
+msgid "Wrong Account"
+msgstr "Verkeerde account"
+
+msgid ""
+"You're signed into the wrong Gratipay account to complete this email "
+"verification. If you accidentally created two Gratipay accounts, you can "
+"merge them by logging into the main one and adding the social accounts from "
+"the other. Email {0} if you'd like help."
+msgstr "U hebt ingelogd met de verkeerde Gratipay account om de e-mailadres verificatie te kunnen voltooien. Als u per ongeluk twee Gratipay accounts heeft aangemaakt, dan kunt u inloggen met uw hoofdaccount om vervolgens daar de andere accounts aan toe te voegen. Stuur een e-mail {0} als u hierbij hulp nodig heeft."
+
+msgid "Success!"
+msgstr "Gelukt!"
+
+msgid "Your email address {0} is now connected to your Gratipay account."
+msgstr "Uw e-mailadres {0} is nu gekoppeld aan uw Gratipay account."
+
+msgid "Address Taken"
+msgstr "Dit e-mailadres is reeds geclaimd"
+
+msgid ""
+"The email address {0} is already connected to a different Gratipay account."
+msgstr "Het e-mailadres {0} is al gekoppeld aan een andere Gratipay account."
+
+msgid "Already Verified"
+msgstr "Deze is reeds geverifieerd"
+
+msgid "Your email address {0} is already connected to your Gratipay account."
+msgstr "Uw e-mailadres {0} is al gekoppeld aan uw Gratipay account."
+
+msgid "Missing Info"
+msgstr "Deze informatie mist nog"
+
+msgid ""
+"Sorry, that's a bad link. You'll need to view your email addresses and start"
+" over."
+msgstr "Excuses, die link klopt niet. Controleer alstublieft uw e-mailadres en begin opnieuw."
+
+msgid "Expired"
+msgstr "Verlopen"
+
+msgid "The verification code for {0} has expired."
+msgstr "De verificatie code voor {0} is verlopen."
+
+msgid "The verification code for {0} is bad."
+msgstr "De verificatie code voor {0} klopt niet."
+
+msgid "Resend verification email"
+msgstr "Verficatie e-mail opnieuw versturen"
+
+msgid "View your email addresses"
+msgstr "Bekijk uw e-mailadressen."
+
+msgid "Active"
+msgstr "Actief"
+
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "These are payments that you recently cancelled."
+msgstr ""
+
+msgid "No results to show"
+msgstr ""
+
+msgid "Export History"
+msgstr "Exporteer geschiedenis"
+
+msgid "pre"
+msgstr "pre"
+
+msgid "pending"
+msgstr "wachtend"
+
+msgid "failed"
+msgstr "gefaald"
+
+msgid "succeeded"
+msgstr "gelukt"
+
+msgid "Your balance is {0}."
+msgstr "Jouw balans is {0}."
+
+msgid "Their balance is {0}."
+msgstr "Hun balans is {0}."
+
+msgid "Account Statement"
+msgstr "Bankafschrift"
+
+msgid "Total given: {0}"
+msgstr "Totaal gegeven: {0}"
+
+msgid "Export as CSV"
+msgstr "Exporteer als CSV"
+
+msgid "Total received: {0}"
+msgstr "Totaal ontvangen: {0}"
+
+msgid "Outside"
+msgstr "Buiten"
+
+msgid "Inside Gratipay"
+msgstr "Binnen Gratipay"
+
+msgid "Bank"
+msgstr "Bank"
+
+msgid "Card"
+msgstr "Kaart"
+
+msgid "Fees"
+msgstr "Kosten"
+
+msgid "Credits"
+msgstr "Krediet"
+
+msgid "Debits"
+msgstr "Debet"
+
+msgid "Balance"
+msgstr "Balans"
+
+msgid "Notes"
+msgstr "Notas"
+
+msgid "Automatic Withdrawal"
+msgstr "Automatische opname"
+
+msgid "Automatic Charge"
+msgstr "Automatische afname"
+
+msgid "Receipt"
+msgstr "Ontvangstbewijs"
+
+msgid "No transactions to show."
+msgstr "Er zijn geen overboekingen aanwezig in het systeem."
+
+msgid "The address cannot be empty."
+msgstr "Het adres moet worden ingevuld."
+
+msgid "Only verified email addresses allowed."
+msgstr "Alleen geverifieerde e-mailadressen zijn toegestaan."
+
+msgid "This is not a valid Bitcoin address."
+msgstr "Dit is geen geldig Bitcoin adres."
+
+msgid "and then you'll be able to add or change your credit card."
+msgstr "en dan kun je een creditcard toevoegen of wijzigen."
+
+msgid "Required"
+msgstr "Nodig"
+
+msgid "Credit Card Number"
+msgstr "Kredietkaartnummer"
+
+msgid "This card number is invalid."
+msgstr "Dit kaartnummer is ongeldig."
+
+msgid "Current: {0}"
+msgstr "Huidig: {0}"
+
+msgid "Expiration"
+msgstr "Geldig tot"
+
+msgid "MM"
+msgstr "MM"
+
+msgid "Expiration Month"
+msgstr "Geldig tot de maand"
+
+msgid "This expiration date is invalid."
+msgstr "Deze geldigheidsdatum is ongeldig."
+
+msgid "YY"
+msgstr "YY"
+
+msgid "Expiration Year"
+msgstr "Geldig tot het jaar"
+
+msgid "CVV"
+msgstr "CVV"
+
+msgid "This verification code is invalid."
+msgstr "Deze verificatiecode is ongeldig."
+
+msgid ""
+"To minimize processing fees, we charge your credit card at least $10 at a "
+"time. {0}Read more ...{1}"
+msgstr ""
+
+msgid "Full Name on Card"
+msgstr "Volledige naam op de kaart"
+
+msgid "Are you sure you want to disconnect your credit card?"
+msgstr "Weet u zeker dat u uw creditcard wilt ontkoppelen?"
+
+msgid "Disconnect My Credit Card"
+msgstr "Koppel mijn kredietkaart af"
+
+msgid "It seems you're trying to delete something that doesn't exist."
+msgstr "Het lijkt erop dat u iets probeert te verwijderen wat niet bestaat."
+
+msgid "Payment Routes"
+msgstr ""
+
+msgid "Adding Money"
+msgstr "Geld toevoegen"
+
+msgid "Your credit card is {0}working{1}"
+msgstr "Uw kredietkaart is {0}operationeel{1}"
+
+msgid "Your credit card is {0}failing{1}"
+msgstr "Uw kredietkaart heeft{0}gefaald{1}"
+
+msgid "Withdrawing Money"
+msgstr "Geld opvragen"
+
+msgid "Choose from one of your verified emails below:"
+msgstr "Kies hieronder een van uw geverifieerde e-mailadressen:"
+
+msgid "Can't find your PayPal email? {0}Add it here{1}."
+msgstr "Kan u uw PayPal e-mailadres niet vinden? {0}Voeg het hier toe{1}."
+
+msgid "You must {0}add and verify{1} your PayPal email first."
+msgstr "U moet eerst uw PayPal e-mailadres {0}toevoegen en verifiëren{1}."
+
+msgid "Are you sure you want to disconnect your PayPal account?"
+msgstr "Weet u zeker dat u uw PayPal account wilt ontkoppelen?"
+
+msgid "Disconnect {0}"
+msgstr "Ontkoppel {0}"
+
+msgid "Close Account"
+msgstr "Sluit account"
+
+msgid "You are {0}"
+msgstr "Je bent {0}"
+
+msgid ""
+"Have you linked to your Gratipay profile from other websites? Be sure to "
+"update those links!"
+msgstr "Heb je je Gratipay profiel gelinkt vanaf andere websites? Verzeker je ervan deze links te actualiseren!"
+
+msgid "Available Money"
+msgstr "Beschikbaar geld."
+
+msgid "Available Balance"
+msgstr "Beschikbare balans"
+
+msgid "API Credentials"
+msgstr "API gegevens"
+
+msgid "User ID:"
+msgstr "Gebruiker ID:"
+
+msgid "API Key:"
+msgstr "API sleutel:"
+
+msgid "Show Key"
+msgstr "Toon sleutel"
+
+msgid "Hide Key"
+msgstr "Verberg sleutel"
+
+msgid "Recreate"
+msgstr "Hermaak"
+
+msgid "API docs"
+msgstr "API docs"
+
+msgid "Privacy"
+msgstr "Privacy"
+
+msgid "Hide total giving to others."
+msgstr "Verberg totaal gegeven aan anderen."
+
+msgid "Hide myself from search results."
+msgstr "Verberg mijzelf in de zoekresultaten"
+
+msgid "On"
+msgstr "Aan"
+
+msgid "Off"
+msgstr "Uit"
+
+msgid "Close"
+msgstr "Sluit"
+
+msgid "Widgets"
+msgstr "Widgets"
+
+msgid "Button"
+msgstr "Knop"
+
+msgid "Use this code to embed a Gratipay button on your website:"
+msgstr "Gebruik deze code om een Gratipay op je website toe te voegen:"
+
+msgid ""
+"The button opens your profile on Gratipay in a new tab or window. Here's "
+"what the text reads:"
+msgstr "De knop opent je profiel op Gratipay in een nieuwe tab of venster. Dit is wat erop staat:"
+
+msgid "person is not logged into Gratipay or doesn't tip you"
+msgstr "persoon is niet in Gratipay ingelogd en geeft je geen fooien"
+
+msgid "person tips you; shows current gift amount"
+msgstr "persoon geeft je fooien; laat huidig gift bedrag zien"
+
+msgid "your own button"
+msgstr "je eigen knop"
+
+msgid "Here's an example using {0}:"
+msgstr "Hier is een voorbeeld met gebruik van {0}:"
+
+msgid "Badge"
+msgstr "Badge"
+
+msgid "Use this code to embed a Gratipay badge on your website:"
+msgstr "Gebruik deze code om een Gratipay badge op je website te zetten:"
+
+msgid "Here's what it looks like:"
+msgstr "Zo ziet het eruit:"
+
+msgid "Giving & Receiving Widgets"
+msgstr "Geven & Ontvangen Widgets"
+
+msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
+msgstr "Gebruik deze code om een Gratipay \"ontvangst' widget op je website te zetten:"
+
+msgid ""
+"Or, if you'd like to include a \"giving\" widget, you can add the {0} "
+"attribute:"
+msgstr "Of, als je een 'geef' widgets wilt invoegen, kan je het {0} attribuut toevoegen:"

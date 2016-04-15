@@ -3,9 +3,9 @@ from __future__ import print_function, unicode_literals
 from Cookie import SimpleCookie
 
 from aspen.utils import utcnow
-import gittip
-from gittip.security.user import User, SESSION, SESSION_REFRESH
-from gittip.testing import Harness
+import gratipay
+from gratipay.security.user import User, SESSION, SESSION_REFRESH
+from gratipay.testing import Harness
 
 
 class TestUser(Harness):
@@ -51,10 +51,10 @@ class TestUser(Harness):
         alice = User.from_username('alice')
         assert alice.ANON is False
 
-    def test_blacklisted_user_is_ANON(self):
+    def test_blacklisted_user_is_not_ANON(self):
         self.make_participant('alice', is_suspicious=True)
         alice = User.from_username('alice')
-        assert alice.ANON is True
+        assert alice.ANON is False
 
 
     # session token
@@ -87,8 +87,8 @@ class TestUser(Harness):
         assert actual == 'alice'
 
     def test_session_cookie_is_secure_if_it_should_be(self):
-        canonical_scheme = gittip.canonical_scheme
-        gittip.canonical_scheme = 'https'
+        use_secure_cookies = gratipay.use_secure_cookies
+        gratipay.use_secure_cookies = True
         try:
             cookies = SimpleCookie()
             self.make_participant('alice')
@@ -96,7 +96,7 @@ class TestUser(Harness):
             user.sign_in(cookies)
             assert '; secure' in cookies[SESSION].output()
         finally:
-            gittip.canonical_scheme = canonical_scheme
+            gratipay.use_secure_cookies = use_secure_cookies
 
     def test_session_is_regularly_refreshed(self):
         self.make_participant('alice')
@@ -112,34 +112,30 @@ class TestUser(Harness):
         assert SESSION in cookies
 
 
+    # from_id
 
-    # key token
-
-    def test_user_from_bad_api_key_is_anonymous(self):
-        user = User.from_api_key('deadbeef')
+    def test_user_from_bad_id_is_anonymous(self):
+        user = User.from_id(1786541)
         assert user.ANON
 
-    def test_user_from_None_api_key_is_anonymous(self):
-        self.make_participant('alice')
-        self.make_participant('bob')
-        user = User.from_api_key(None)
+    def test_user_from_None_id_is_anonymous(self):
+        user = User.from_id(None)
         assert user.ANON
 
-    def test_user_can_be_loaded_from_api_key(self):
+    def test_user_can_be_loaded_from_id(self):
         alice = self.make_participant('alice')
-        api_key = alice.recreate_api_key()
-        actual = User.from_api_key(api_key).participant.username
+        actual = User.from_id(alice.id).participant.username
         assert actual == 'alice'
 
 
-    def test_user_from_bad_id_is_anonymous(self):
+    # from_username
+
+    def test_user_from_bad_username_is_anonymous(self):
         user = User.from_username('deadbeef')
         assert user.ANON
 
-    def test_suspicious_user_from_username_is_anonymous(self):
-        self.make_participant('alice', is_suspicious=True)
-        user = User.from_username('alice')
-        assert user.ANON
+
+    # sign_out
 
     def test_signed_out_user_is_anonymous(self):
         self.make_participant('alice')

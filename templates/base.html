@@ -1,127 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
-    <title>{% if title %}{{ title|e }} - {% endif %}Gittip</title>
+    {% block head_early %}{% endblock %}
+    <title>{% if title %}{{ title }} - {% endif %}{% if banner %}{{ banner }} - {% endif %}Gratipay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ website.asset_url }}/gittip.css" type="text/css">
-    <link rel="apple-touch-icon-precomposed" href="{{ website.asset_url }}/touch/icon-60x60.png">
-    <link rel="apple-touch-icon-precomposed" href="{{ website.asset_url }}/touch/icon-76x76.png" sizes="76x76">
-    <link rel="apple-touch-icon-precomposed" href="{{ website.asset_url }}/touch/icon-120x120.png" sizes="120x120">
-    <link rel="apple-touch-icon-precomposed" href="{{ website.asset_url }}/touch/icon-152x152.png" sizes="152x152">
-
+    <link rel="stylesheet" href="{{ website.asset('gratipay.css') }}" type="text/css">
+    <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-60x60.png') }}">
+    <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-76x76.png') }}" sizes="76x76">
+    <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-120x120.png') }}" sizes="120x120">
+    <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-152x152.png') }}" sizes="152x152">
+    <link rel="stylesheet" type="text/css" href="//cloud.typography.com/6540672/615104/css/fonts.css" />
     {% block head %}{% endblock %}
+
+    {% if website.include_piwik and request.headers.get('DNT') != '1' %}
+    <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//gratipay.piwik.pro/";
+            _paq.push(['setTrackerUrl', u+'piwik.php']);
+            _paq.push(['setSiteId', 1]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    {% endif %}
 </head>
-<body>
-    <div class="container">
-        <div id="header">
-            <table><tr><td class="logo">
-                <h1>
-                    <a href="/">
-                        <img src="{{ website.asset_url }}/logo.png"
-                             alt="Gittip" />
-                    </a>
-                </h1>
-                </td><td class="motto luxury">
-            <a href='/about/charts.html'>{{ website.gnactive }} users exchanging ${{ website.gtransfer_volume }} per week</a>
-            </td></tr></table>
+{% set homepage = request.path.raw == '/' %}
+<body id="{{ 'homepage' if homepage }}">
+
+    <div id="wrapper">
+        <div id="header" class="clearfix">
+            <h1><a href="/"><img src="{{ website.asset('gratipay.svg') }}"
+                                 alt="Gratipay" /></a></h1>
+            {% set pages = [('/search', _('Search'))] %}
+            {% set current_page = request.path.raw.split('/')[1] %}
+            {% include "templates/nav.html" %}
             {% if user.ANON %}
-              {% include "templates/sign-in-using.html" %}
+                {% include "templates/sign-in-using.html" %}
             {% else %}
-            <div class="you-are">
-                <a href="/{{ user.participant.username }}/">{{ user.participant.username }}</a> &ndash;
-                <a id="sign-out" href="/sign-out.html">sign out</a>
-                <div class="quick-stats">
-                  Giving: <a href="/{{ user.participant.username }}/giving/">
-                              <span class="my-total-giving">${{ user.participant.giving }}<span>/wk
-                          </a>
-                  <br />
-                  Receiving: <b>${{ user.participant.receiving }}/wk</b>
-                </div>
+            <ul class="nav you-are">
+                <li>
+                    {% set parts = request.path.raw.split('/') %}
+                    {% set on_profile = parts[1] == '~' %}
+                    {% set on_own_profile = on_profile and parts[2] == user.participant.username %}
+                    <a href="/~{{user.participant.username}}/"{% if on_own_profile %} class="selected"{% endif %}>
+                        ~{{ user.participant.username }}
+                        <div class="quick-stats">
+                            <span class="my-total-giving">{{ format_currency(user.participant.giving, "USD") }}</span>/{{ _("wk") }}
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a id="sign-out" href="/sign-out.html">
+                        <span class="icon">&#xe600;</span>
+                        <span class="screen-reader-text">{{ _("Sign out") }}</span>
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+            {% include "templates/support-gratipay.html" %}
+        </div>
+
+        <div id="banner">
+            {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
+        </div>
+
+        {% if request.path.raw != '/1.0-payout' %}
+        {% if not user.participant or user.participant.status_of_1_0_payout == 'pending-application' %}
+        <table id="notice">
+            <tr>
+                <td>&#x2605;</td>
+                <td>{{ _( "{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available {a2}indefinitely{_a}{_nowrap}."
+                        , nowrap='<span class="nowrap">'|safe
+                        , _nowrap='</span>'|safe
+                        , a='<a href="/1.0-payout">'|safe
+                        , a2='<a href="https://medium.com/gratipay-blog/39c07bd031b">'|safe
+                        , _a='</a>'|safe
+                         ) }}</td>
+                <td>&#x2605;</td>
+            </tr>
+        </table>
+        {% elif user.participant and user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
+        <table id="notice">
+            <tr>
+                <td>&#x2605;</td>
+                <td>{{ _( "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
+                        , nowrap='<span class="nowrap">'|safe
+                        , _nowrap='</span>'|safe
+                        , a='<a href="/1.0-payout">'|safe
+                        , _a='</a>'|safe
+                         ) }}</td>
+                <td>&#x2605;</td>
+            </tr>
+        </table>
+        {% endif %}
+        {% endif %}
+
+        <div id="main">
+            {% block main %}
+            {% if not suppress_sidebar %}
+            <div id="sidebar">{% block sidebar %}{% endblock %}</div>
+            {% endif %}
+            <div id="content">
+                {% block subnav %}{% endblock %}
+                {% if title %}<h1>{{ title }}</h1>{% endif %}
+                {% block content %}{% endblock %}
             </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <div id="hero">
-        <div class="container">
-            {% block heading %}
-            {% if title %}
-            <h2 class="top"><span>{{ title }}</span></h2>
-            {% endif %}
             {% endblock %}
-        </div>
-    </div>
-
-    <div class="container">
-        {% block killbox %}
-        <div class="box">
-            {% block box %}{% endblock %}
-        </div>
-        {% endblock %}
-        <div id="page" class="group">
-            {% block page %}{% endblock %}
         </div>
 
         <div id="footer">
-            <div class="social">
-                <a href="https://twitter.com/gittip"><img src="{{ website.asset_url }}/icons/twitter.16.png" /></a>
-            </div>
             <ul>
-                <li><a href='http://blog.gittip.com/'>Blog</a></li>
-                <li><a href="/about/">About</a></li>
-                <li><a href="https://github.com/gittip/www.gittip.com">Source</a></li>
-                <li><a href='/about/faq.html'>FAQ</a></li>
-                <li><a href='/about/stats.html'>Stats</a></li>
-                <li><a href='/about/charts.html'>Charts</a></li>
-                <li><a href="/about/terms/">Terms</a></li>
-                <li><a href="/about/privacy/">Privacy</a></li>
-                <li><a href='/about/fraud/'>Fraud</a></li>
-                <li><a href='http://building.gittip.com/appendices/colophon'>Colophon</a></li>
-                <li><a href='/security.txt'>Security</a></li>
+                <li class="left">
+                <a href="/about/">{{ ("About") }}</a>
+                </li><li>
+                    <a href="https://medium.com/gratipay-blog"
+                       title="our blog on Medium">
+                        <span class="icon">&#xe006;</span>
+                        <span class="screen-reader-text">{{ _("Blog") }}</span>
+                    </a>
+                </li><li>
+                    <a href="https://github.com/gratipay/gratipay.com/issues/new"
+                       title="public feedback on GitHub">
+                        <span class="icon">&#xe003;</span>
+                        <span class="screen-reader-text">{{ _("GitHub") }}</span>
+                    </a>
+                </li><li>
+                    <a href="mailto:support@gratipay.com"
+                       title="private feedback via email">
+                        <span class="icon">&#xe007;</span>
+                        <span class="screen-reader-text">{{ _("Email") }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 
-    {% if website.segment_key and request.headers.get('DNT') != '1' %}
-    <!-- For non-minified JS and inline docs: https://segment.io/docs/tutorials/quickstart-analytics.js/#step-1-copy-the-snippet -->
-    <script type="text/javascript">
-        window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
-        window.analytics.load("{{ website.segment_key }}");
-        window.analytics.page();
-    </script>
-    <script type="text/javascript">
-    {% if user.ANON %}
-        // Automatic tracking based on anonymous session ID.
-        // See: https://segment.io/docs/tracking-api/identify/#anonymous-id
-        analytics.identify({});
-    {% else %}
-        analytics.identify('{{ user.participant.id }}', function(){});
-    {% endif %}
-    </script>
-    {% endif %}
+<script>
+    // http://stackoverflow.com/questions/7131909/facebook-callback-appends-to-return-url
+    if (window.location.hash == '#_=_') {
+        window.location.hash = ''; // for older browsers, leaves a # behind
+        history.pushState('', document.title, window.location.pathname); // nice and clean
+    }
+</script>
+<script src="{{ website.asset('jquery.min.js') }}"></script>
+<script src="{{ website.asset('chosen.jquery.min.js') }}"></script>
+<script src="{{ website.asset('tipr.min.js') }}"></script>
+<script src="{{ website.asset('bootstrap-dropdown.js') }}"></script>
+<script src="{{ website.asset('gratipay.js') }}"></script>
 
-    <script src="{{ website.asset_url }}/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        Gratipay.init();
+        {% if not user.ANON %}
+        Gratipay.username = {{ to_javascript(user.participant.username)|safe }};
+        Gratipay.initNotifications(
+            {{ to_javascript(user.participant.render_notifications(state))|safe }}
+        );
+        {% endif %}
+    });
+</script>
 
-    <!-- Used on the profile edit page for the community chooser. -->
-    <script src="{{ website.asset_url }}/chosen.jquery.min.js"></script>
+{% block scripts %}{% endblock %}
 
-    <script src="{{ website.asset_url }}/tipr.min.js"></script>
-
-    <script src="{{ website.asset_url }}/bootstrap-dropdown.js"></script>
-
-    <script src="{{ website.asset_url }}/utils.js"></script>
-    <script src="{{ website.asset_url }}/gittip.js"></script>
-    <script>$(document).ready(Gittip.init);</script>
-    {% block scripts %}
-
-    {% endblock %}
-
-    {% if not user.ANON and user.participant.credit_card_expiring(request, response) %}
-    <script>
-        $(document).ready(function () {
-            Gittip.notification(["span", "Your credit card is about to expire! ", ['a', {'href': '/credit-card.html'}, 'Update card']], "error")
-        });
-    </script>
-    {% endif %}
+{% if website.include_piwik and request.headers.get('DNT') != '1' %}
+<noscript><img src="//gratipay.piwik.pro/piwik.php?idsite=1" style="border:0;" alt="" /></noscript>
+{% endif %}
 </body>
 </html>

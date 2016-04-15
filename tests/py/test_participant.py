@@ -1,28 +1,31 @@
 from __future__ import print_function, unicode_literals
 
 import datetime
-import random
 from decimal import Decimal
+import random
 
+import mock
 import pytest
+
 from aspen.utils import utcnow
-from gittip import NotSane
-from gittip.exceptions import (
-    HasBigTips,
+from gratipay import NotSane
+from gratipay.billing.instruments import CreditCard
+from gratipay.exceptions import (
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameAlreadyTaken,
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
-    NoSelfTipping,
-    NoTippee,
+    NoTeam,
     BadAmount,
 )
-from gittip.models.account_elsewhere import AccountElsewhere
-from gittip.models.participant import (
+from gratipay.models.account_elsewhere import AccountElsewhere
+from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.participant import (
     LastElsewhere, NeedConfirmation, NonexistingElsewhere, Participant, TeamCantBeOnlyAuth
 )
-from gittip.testing import Harness
+from gratipay.models.team import Team
+from gratipay.testing import Harness
 
 
 # TODO: Test that accounts elsewhere are not considered claimed by default
@@ -72,8 +75,8 @@ class TestAbsorptions(Harness):
         self.expected_new_balance = self.bob.balance + deadbeef.balance
         deadbeef_twitter = AccountElsewhere.from_user_name('twitter', 'deadbeef')
 
-        self.carl.set_tip_to(self.bob, '1.00')
-        self.alice.set_tip_to(deadbeef, '1.00')
+        self.make_tip(self.carl, self.bob, '1.00')
+        self.make_tip(self.alice, deadbeef, '1.00')
         self.bob.take_over(deadbeef_twitter, have_confirmation=True)
         self.deadbeef_archived = Participant.from_id(deadbeef.id)
 
@@ -82,15 +85,14 @@ class TestAbsorptions(Harness):
         actual = Participant.from_username('alice').__class__
         assert actual is expected
 
+    @pytest.mark.xfail(reason="#3399")
     def test_bob_has_two_dollars_in_tips(self):
         expected = Decimal('2.00')
         actual = self.bob.receiving
         assert actual == expected
 
     def test_alice_gives_to_bob_now(self):
-        expected = Decimal('1.00')
-        actual = self.alice.get_tip_to('bob')
-        assert actual == expected
+        assert self.get_tip('alice', 'bob') == Decimal('1.00')
 
     def test_deadbeef_is_archived(self):
         actual = self.db.one( "SELECT count(*) FROM absorptions "
@@ -100,14 +102,10 @@ class TestAbsorptions(Harness):
         assert actual == expected
 
     def test_alice_doesnt_gives_to_deadbeef_anymore(self):
-        expected = Decimal('0.00')
-        actual = self.alice.get_tip_to('deadbeef')
-        assert actual == expected
+        assert self.get_tip('alice', 'deadbeef') == Decimal('0.00')
 
     def test_alice_doesnt_give_to_whatever_deadbeef_was_archived_as_either(self):
-        expected = Decimal('0.00')
-        actual = self.alice.get_tip_to(self.deadbeef_archived.username)
-        assert actual == expected
+        assert self.get_tip('alice', self.deadbeef_archived.username) == Decimal('0.00')
 
     def test_there_is_no_more_deadbeef(self):
         actual = Participant.from_username('deadbeef')
@@ -126,7 +124,7 @@ class TestTakeOver(Harness):
         bob_twitter   = self.make_elsewhere('twitter', 2, 'bob')
         alice = alice_twitter.opt_in('alice')[0].participant
         bob = bob_twitter.opt_in('bob')[0].participant
-        alice.set_tip_to(bob, '1.00')
+        self.make_tip(alice, bob, '1.00')
         bob.take_over(alice_twitter, have_confirmation=True)
         self.db.self_check()
 
@@ -135,8 +133,9 @@ class TestTakeOver(Harness):
         bob_twitter   = self.make_elsewhere('twitter', 2, 'bob')
         alice = alice_twitter.opt_in('alice')[0].participant
         bob = bob_twitter.opt_in('bob')[0].participant
-        alice.set_tip_to(bob, '1.00')
-        alice.set_tip_to(bob, '0.00')
+        self.make_tip(alice, bob, '1.00')
+        self.make_tip(alice, bob, '0.00')
+
         bob.take_over(alice_twitter, have_confirmation=True)
         self.db.self_check()
 
@@ -146,8 +145,8 @@ class TestTakeOver(Harness):
         carl_twitter  = self.make_elsewhere('twitter', 3, 'carl')
         alice = alice_twitter.opt_in('alice')[0].participant
         carl = carl_twitter.opt_in('carl')[0].participant
-        carl.set_tip_to(bob, '1.00')
-        carl.set_tip_to(bob, '0.00')
+        self.make_tip(carl, bob, '1.00')
+        self.make_tip(carl, bob, '0.00')
         alice.take_over(carl_twitter, have_confirmation=True)
         ntips = self.db.one("select count(*) from tips")
         assert 2 == ntips
@@ -160,11 +159,24 @@ class TestTakeOver(Harness):
         alice = alice_twitter.opt_in('alice')[0].participant
         bob = bob_twitter.opt_in('bob')[0].participant
         carl = carl_twitter.opt_in('carl')[0].participant
-        bob.set_tip_to(carl, '1.00')
-        bob.set_tip_to(carl, '0.00')
+        self.make_tip(bob, carl, '1.00')
+        self.make_tip(bob, carl, '0.00')
         alice.take_over(carl_twitter, have_confirmation=True)
         ntips = self.db.one("select count(*) from tips")
         assert 2 == ntips
+        self.db.self_check()
+
+    def test_is_funded_is_correct_for_consolidated_tips_receiving(self):
+        alice = self.make_participant('alice', claimed_time='now', balance=1)
+        bob = self.make_participant('bob', elsewhere='twitter')
+        carl = self.make_participant('carl', elsewhere='github')
+        self.make_tip(alice, bob, '1.00')  # funded
+        self.make_tip(alice, carl, '5.00')  # not funded
+        bob.take_over(('github', str(carl.id)), have_confirmation=True)
+        tips = self.db.all("select * from tips where amount > 0 order by id asc")
+        assert len(tips) == 3
+        assert tips[-1].amount == 6
+        assert tips[-1].is_funded is False
         self.db.self_check()
 
     def test_take_over_fails_if_it_would_result_in_just_a_team_account(self):
@@ -188,6 +200,86 @@ class TestTakeOver(Harness):
         alice.take_over(bob_github, have_confirmation=True)
         self.db.self_check()
 
+    @mock.patch.object(Participant, '_mailer')
+    def test_email_addresses_merging(self, mailer):
+        alice = self.make_participant('alice')
+        alice.add_email('alice@example.com')
+        alice.add_email('alice@example.net')
+        alice.add_email('alice@example.org')
+        alice.verify_email('alice@example.org', alice.get_email('alice@example.org').nonce)
+        bob_github = self.make_elsewhere('github', 2, 'bob')
+        bob = bob_github.opt_in('bob')[0].participant
+        bob.add_email('alice@example.com', '0 seconds')
+        bob.verify_email('alice@example.com', bob.get_email('alice@example.com').nonce)
+        bob.add_email('alice@example.net', '0 seconds')
+        bob.add_email('bob@example.net', '0 seconds')
+        alice.take_over(bob_github, have_confirmation=True)
+
+        alice_emails = {e.address: e for e in alice.get_emails()}
+        assert len(alice_emails) == 4
+        assert alice_emails['alice@example.com'].verified
+        assert alice_emails['alice@example.org'].verified
+        assert not alice_emails['alice@example.net'].verified
+        assert not alice_emails['bob@example.net'].verified
+
+        assert not Participant.from_id(bob.id).get_emails()
+
+
+    # The below tests were moved up here from TestParticipant, and may be duplicates.
+
+    def hackedSetUp(self):
+        now = utcnow()
+        for username in ['alice', 'bob', 'carl']:
+            p = self.make_participant(username, claimed_time=now, elsewhere='twitter')
+            setattr(self, username, p)
+
+    def test_connecting_unknown_account_fails(self):
+        self.hackedSetUp()
+        with self.assertRaises(NotSane):
+            self.bob.take_over(('github', 'jim'))
+
+    def test_cant_take_over_claimed_participant_without_confirmation(self):
+        self.hackedSetUp()
+        with self.assertRaises(NeedConfirmation):
+            self.alice.take_over(('twitter', str(self.bob.id)))
+
+    def test_taking_over_yourself_sets_all_to_zero(self):
+        self.hackedSetUp()
+        self.make_tip(self.alice, self.bob, '1.00')
+        self.alice.take_over(('twitter', str(self.bob.id)), have_confirmation=True)
+        expected = Decimal('0.00')
+        actual = self.alice.giving
+        assert actual == expected
+
+    def test_alice_ends_up_tipping_bob_two_dollars(self):
+        self.hackedSetUp()
+        self.make_tip(self.alice, self.bob, '1.00')
+        self.make_tip(self.alice, self.carl, '1.00')
+        self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
+        assert self.get_tip('alice', 'bob') == Decimal('2.00')
+
+    def test_bob_ends_up_tipping_alice_two_dollars(self):
+        self.hackedSetUp()
+        self.make_tip(self.bob, self.alice, '1.00')
+        self.make_tip(self.carl, self.alice, '1.00')
+        self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
+        assert self.get_tip('bob', 'alice') == Decimal('2.00')
+
+    def test_ctime_comes_from_the_older_tip(self):
+        self.hackedSetUp()
+        self.make_tip(self.alice, self.bob, '1.00')
+        self.make_tip(self.alice, self.carl, '1.00')
+        self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
+
+        ctimes = self.db.all("""
+            SELECT ctime
+              FROM tips
+             WHERE tipper = 'alice'
+               AND tippee = 'bob'
+        """)
+        assert len(ctimes) == 2
+        assert ctimes[0] == ctimes[1]
+
 
 class TestParticipant(Harness):
     def setUp(self):
@@ -197,75 +289,13 @@ class TestParticipant(Harness):
             p = self.make_participant(username, claimed_time=now, elsewhere='twitter')
             setattr(self, username, p)
 
-    def test_bob_is_singular(self):
-        expected = True
-        actual = self.bob.IS_SINGULAR
-        assert actual == expected
-
-    def test_john_is_plural(self):
-        expected = True
-        self.make_participant('john', number='plural')
-        actual = Participant.from_username('john').IS_PLURAL
-        assert actual == expected
-
-    def test_can_change_email(self):
-        self.alice.update_email('alice@gittip.com')
-        expected = 'alice@gittip.com'
-        actual = self.alice.email.address
-        assert actual == expected
-
-    def test_can_confirm_email(self):
-        self.alice.update_email('alice@gittip.com', True)
-        actual = self.alice.email.confirmed
-        assert actual == True
-
-    def test_cant_take_over_claimed_participant_without_confirmation(self):
-        with self.assertRaises(NeedConfirmation):
-            self.alice.take_over(('twitter', str(self.bob.id)))
-
-    def test_taking_over_yourself_sets_all_to_zero(self):
-        self.alice.set_tip_to(self.bob, '1.00')
-        self.alice.take_over(('twitter', str(self.bob.id)), have_confirmation=True)
-        expected = Decimal('0.00')
-        actual = self.alice.giving
-        assert actual == expected
-
-    def test_alice_ends_up_tipping_bob_two_dollars(self):
-        self.alice.set_tip_to(self.bob, '1.00')
-        self.alice.set_tip_to(self.carl, '1.00')
-        self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
-        expected = Decimal('2.00')
-        actual = self.alice.get_tip_to('bob')
-        assert actual == expected
-
-    def test_bob_ends_up_tipping_alice_two_dollars(self):
-        self.bob.set_tip_to(self.alice, '1.00')
-        self.carl.set_tip_to(self.alice, '1.00')
-        self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
-        expected = Decimal('2.00')
-        actual = self.bob.get_tip_to('alice')
-        assert actual == expected
-
-    def test_ctime_comes_from_the_older_tip(self):
-        self.alice.set_tip_to(self.bob, '1.00')
-        self.alice.set_tip_to(self.carl, '1.00')
-        self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
-
-        tips = self.db.all("SELECT * FROM tips")
-        first, second = tips[0], tips[1]
-
-        # sanity checks (these don't count :)
-        assert len(tips) == 4
-        assert first.tipper, first.tippee == ('alice', 'bob')
-        assert second.tipper, second.tippee == ('alice', 'carl')
-
-        expected = first.ctime
-        actual = self.db.one("SELECT ctime FROM tips ORDER BY ctime LIMIT 1")
-        assert actual == expected
-
-    def test_connecting_unknown_account_fails(self):
-        with self.assertRaises(NotSane):
-            self.bob.take_over(('github', 'jim'))
+    def test_comparison(self):
+        assert self.alice == self.alice
+        assert not (self.alice != self.alice)
+        assert self.alice != self.bob
+        assert not (self.alice == self.bob)
+        assert self.alice != None
+        assert not (self.alice == None)
 
     def test_delete_elsewhere_last(self):
         with pytest.raises(LastElsewhere):
@@ -304,15 +334,13 @@ class TestParticipant(Harness):
         assert accounts.get('twitter') is None and accounts['github']
 
 
-
-
 class Tests(Harness):
 
     def random_restricted_username(self):
         """helper method to chooses a restricted username for testing """
-        from gittip import RESTRICTED_USERNAMES
+        from gratipay import RESTRICTED_USERNAMES
         random_item = random.choice(RESTRICTED_USERNAMES)
-        while random_item.startswith('%'):
+        while any(map(random_item.startswith, ('%', '~'))):
             random_item = random.choice(RESTRICTED_USERNAMES)
         return random_item
 
@@ -372,20 +400,6 @@ class Tests(Harness):
         with self.assertRaises(UsernameIsRestricted):
             self.participant.change_username(self.random_restricted_username())
 
-    def test_getting_tips_actually_made(self):
-        expected = Decimal('1.00')
-        user2 = self.make_participant('user2')
-        self.participant.set_as_claimed()
-        self.participant.set_tip_to(user2, expected)
-        actual = self.participant.get_tip_to('user2')
-        assert actual == expected
-
-    def test_getting_tips_not_made(self):
-        expected = Decimal('0.00')
-        self.make_participant('user2')
-        actual = self.participant.get_tip_to('user2')
-        assert actual == expected
-
 
     # id
 
@@ -394,284 +408,208 @@ class Tests(Harness):
         assert actual == long
 
 
-    # number
+    # set_payment_instruction - spi
 
-    def test_cant_go_singular_with_big_tips(self):
+    def test_spi_sets_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', number='plural')
-        carl = self.make_participant('carl', claimed_time='now')
-        carl.set_tip_to(bob, '100.00')
-        alice.set_tip_to(bob, '1000.00')
-        pytest.raises(HasBigTips, bob.update_number, 'singular')
+        team = self.make_team()
+        alice.set_payment_instruction(team, '1.00')
 
-    def test_can_go_singular_without_big_tips(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', number='plural')
-        alice.set_tip_to(bob, '100.00')
-        bob.update_number('singular')
-        assert Participant.from_username('bob').number == 'singular'
-
-    def test_can_go_plural(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '100.00')
-        bob.update_number('plural')
-        assert Participant.from_username('bob').number == 'plural'
-
-
-    # set_tip_to - stt
-
-    def test_stt_sets_tip_to(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '1.00')
-
-        actual = alice.get_tip_to('bob')
+        actual = alice.get_payment_instruction(team)['amount']
         assert actual == Decimal('1.00')
 
-    def test_stt_returns_a_Decimal_and_a_boolean(self):
+    def test_spi_returns_a_dict(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        actual = alice.set_tip_to(bob, '1.00')
-        assert actual == (Decimal('1.00'), True)
+        team = self.make_team()
+        actual = alice.set_payment_instruction(team, '1.00')
+        assert isinstance(actual, dict)
+        assert isinstance(actual['amount'], Decimal)
+        assert actual['amount'] == 1
 
-    def test_stt_returns_False_for_second_time_tipper(self):
+    def test_spi_allows_up_to_a_thousand(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '1.00')
-        actual = alice.set_tip_to(bob, '2.00')
-        assert actual == (Decimal('2.00'), False)
+        team = self.make_team()
+        alice.set_payment_instruction(team, '1000.00')
 
-    def test_stt_doesnt_allow_self_tipping(self):
+    def test_spi_doesnt_allow_a_penny_more(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoSelfTipping, alice.set_tip_to, 'alice', '10.00')
+        team = self.make_team()
+        self.assertRaises(BadAmount, alice.set_payment_instruction, team, '1000.01')
 
-    def test_stt_doesnt_allow_just_any_ole_amount(self):
+    def test_spi_allows_a_zero_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.make_participant('bob')
-        self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.00')
+        team = self.make_team()
+        alice.set_payment_instruction(team, '0.00')
 
-    def test_stt_allows_higher_tip_to_plural_receiver(self):
+    def test_spi_doesnt_allow_a_penny_less(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', number='plural')
-        actual = alice.set_tip_to(bob, '1000.00')
-        assert actual == (Decimal('1000.00'), True)
+        team = self.make_team()
+        self.assertRaises(BadAmount, alice.set_payment_instruction, team, '-0.01')
 
-    def test_stt_still_caps_tips_to_plural_receivers(self):
+    def test_spi_fails_to_set_a_payment_instruction_to_an_unknown_team(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.make_participant('bob', number='plural')
-        self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.01')
+        self.assertRaises(NoTeam, alice.set_payment_instruction, 'The Stargazer', '1.00')
 
-    def test_stt_fails_to_tip_unknown_people(self):
+    def test_spi_is_free_rider_defaults_to_none(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoTippee, alice.set_tip_to, 'bob', '1.00')
+        assert alice.is_free_rider is None
+
+    def test_spi_sets_is_free_rider_to_false(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
+        alice.set_payment_instruction(gratipay, '0.01')
+        assert alice.is_free_rider is False
+        assert Participant.from_username('alice').is_free_rider is False
+
+    def test_spi_resets_is_free_rider_to_null(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
+        alice.set_payment_instruction(gratipay, '0.00')
+        assert alice.is_free_rider is None
+        assert Participant.from_username('alice').is_free_rider is None
 
 
-    # giving and receiving
+    # get_teams - gt
 
-    def test_giving_and_receiving_only_count_latest_tip(self):
+    def test_get_teams_gets_teams(self):
+        self.make_team(is_approved=True)
+        picard = Participant.from_username('picard')
+        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise']
+
+    def test_get_teams_can_get_only_approved_teams(self):
+        self.make_team(is_approved=True)
+        picard = Participant.from_username('picard')
+        self.make_team('The Stargazer', owner=picard, is_approved=False)
+        assert [t.slug for t in picard.get_teams(only_approved=True)] == ['TheEnterprise']
+
+    def test_get_teams_can_get_all_teams(self):
+        self.make_team(is_approved=True)
+        picard = Participant.from_username('picard')
+        self.make_team('The Stargazer', owner=picard, is_approved=False)
+        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise', 'TheStargazer']
+
+
+    # giving
+
+    def test_giving_only_includes_funded_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, '12.00')
-        alice.set_tip_to(bob, '3.00')
+        carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
+        team = self.make_team(is_approved=True)
+
+        alice.set_payment_instruction(team, '3.00') # The only funded tip
+        bob.set_payment_instruction(team, '5.00')
+        carl.set_payment_instruction(team, '7.00')
+
         assert alice.giving == Decimal('3.00')
-        assert bob.receiving == Decimal('3.00')
+        assert bob.giving == Decimal('0.00')
+        assert carl.giving == Decimal('0.00')
 
-    def test_receiving_includes_tips_from_accounts_with_a_working_card(self):
+        funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
+        assert funded_tip.participant == alice.username
+
+    def test_giving_only_includes_the_latest_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
+        team = self.make_team(is_approved=True)
 
-        expected = Decimal('3.00')
-        actual = bob.receiving
-        assert actual == expected
+        alice.set_payment_instruction(team, '12.00')
+        alice.set_payment_instruction(team, '4.00')
 
-    def test_receiving_ignores_tips_from_accounts_with_no_card_on_file(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result=None)
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
+        assert alice.giving == Decimal('4.00')
 
-        expected = Decimal('0.00')
-        actual = bob.receiving
-        assert actual == expected
+    @mock.patch('braintree.PaymentMethod.delete')
+    def test_giving_is_updated_when_credit_card_is_updated(self, btd):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='fail')
+        team = self.make_team(is_approved=True)
 
-    def test_receiving_ignores_tips_from_accounts_with_a_failing_card_on_file(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result="Fail!")
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
+        alice.set_payment_instruction(team, '5.00') # Not funded, failing card
 
-        expected = Decimal('0.00')
-        actual = bob.receiving
-        assert actual == expected
-
-    def test_receiving_includes_tips_from_whitelisted_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=False
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        expected = Decimal('3.00')
-        actual = bob.receiving
-        assert actual == expected
-
-    def test_receiving_includes_tips_from_unreviewed_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=None
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        expected = Decimal('3.00')
-        actual = bob.receiving
-        assert actual == expected
-
-    def test_receiving_ignores_tips_from_blacklisted_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=True
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        expected = Decimal('0.00')
-        actual = bob.receiving
-        assert actual == expected
-
-    def test_receiving_includes_taking_when_updated_from_set_tip_to(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', taking=Decimal('42.00'))
-        alice.set_tip_to(bob, '3.00')
-        assert Participant.from_username('bob').receiving == bob.receiving == Decimal('45.00')
-
-    def test_receiving_is_zero_for_patrons(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, '3.00')
-
-        bob.update_goal(Decimal('-1'))
-        assert bob.receiving == 0
-        alice = Participant.from_id(alice.id)
-        assert alice.giving == 0
-
-
-    # pledging
-
-    def test_pledging_only_counts_latest_tip(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_elsewhere('github', 58946, 'bob').participant
-        alice.set_tip_to(bob, '12.00')
-        alice.set_tip_to(bob, '3.00')
-        assert alice.pledging == Decimal('3.00')
-
-    def test_pledging_isnt_giving(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_elsewhere('github', 58946, 'bob').participant
-        alice.set_tip_to(bob, '3.00')
         assert alice.giving == Decimal('0.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
 
+        # Alice updates her card..
+        ExchangeRoute.from_network(alice, 'braintree-cc').invalidate()
+        ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar', '')
 
-    # get_number_of_backers - gnob
+        assert alice.giving == Decimal('5.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('5.00')
 
-    def test_gnob_gets_number_of_backers(self):
+    @mock.patch('braintree.PaymentMethod.delete')
+    def test_giving_is_updated_when_credit_card_fails(self, btd):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
-        clancy = self.make_participant('clancy')
+        team = self.make_team(is_approved=True)
 
-        alice.set_tip_to(clancy, '3.00')
-        bob.set_tip_to(clancy, '1.00')
+        alice.set_payment_instruction(team, '5.00') # funded
 
-        actual = clancy.get_number_of_backers()
-        assert actual == 2
+        assert alice.giving == Decimal('5.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('5.00')
+        assert Participant.from_username(team.owner).taking == Decimal('5.00')
+
+        ExchangeRoute.from_network(alice, 'braintree-cc').update_error("Card expired")
+
+        assert Participant.from_username('alice').giving == Decimal('0.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
+        assert Participant.from_username(team.owner).taking == Decimal('0.00')
 
 
-    def test_gnob_includes_backers_with_a_working_card_on_file(self):
+    # credit_card_expiring
+
+    def test_credit_card_expiring_no_card(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        assert alice.credit_card_expiring() == None
+
+    @mock.patch.object(CreditCard, "from_route")
+    def test_credit_card_expiring_valid_card(self, cc):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
+        cc.return_value = CreditCard(
+            expiration_year=2050,
+            expiration_month=12
+        )
 
-        actual = bob.get_number_of_backers()
-        assert actual == 1
+        assert alice.credit_card_expiring() == False
 
-    def test_gnob_ignores_backers_with_no_card_on_file(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result=None)
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        actual = bob.get_number_of_backers()
-        assert actual == 0
-
-    def test_gnob_ignores_backers_with_a_failing_card_on_file(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result="Fail!")
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        actual = bob.get_number_of_backers()
-        assert actual == 0
-
-
-    def test_gnob_includes_whitelisted_backers(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=False
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        actual = bob.get_number_of_backers()
-        assert actual == 1
-
-    def test_gnob_includes_unreviewed_backers(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=None
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        actual = bob.get_number_of_backers()
-        assert actual == 1
-
-    def test_gnob_ignores_blacklisted_backers(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=True
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        actual = bob.get_number_of_backers()
-        assert actual == 0
-
-
-    def test_gnob_ignores_backers_where_tip_is_zero(self):
+    @mock.patch.object(CreditCard, "from_route")
+    def test_credit_card_expiring_expired_card(self, cc):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '0.00')
+        cc.return_value = CreditCard(
+            expiration_year=2010,
+            expiration_month=12
+        )
 
-        actual = bob.get_number_of_backers()
-        assert actual == 0
+        assert alice.credit_card_expiring() == True
 
-    def test_gnob_looks_at_latest_tip_only(self):
+
+    # dues
+
+    def test_dues_are_cancelled_along_with_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
+        team = self.make_team(is_approved=True)
 
-        alice.set_tip_to(bob, '1.00')
-        alice.set_tip_to(bob, '12.00')
-        alice.set_tip_to(bob, '3.00')
-        alice.set_tip_to(bob, '6.00')
-        alice.set_tip_to(bob, '0.00')
+        alice.set_payment_instruction(team, '5.00')
 
-        actual = bob.get_number_of_backers()
-        assert actual == 0
+        # Fake dues
+        self.db.run("""
+
+            UPDATE payment_instructions ppi
+               SET due = '5.00'
+             WHERE ppi.participant = 'alice'
+               AND ppi.team = %s
+
+        """, (team.slug, ))
+
+        assert alice.get_due(team) == Decimal('5.00')
+
+        # Increase subscription amount
+        alice.set_payment_instruction(team, '10.00')
+        assert alice.get_due(team) == Decimal('5.00')
+
+        # Cancel the subscription
+        alice.set_payment_instruction(team, '0.00')
+        assert alice.get_due(team) == Decimal('0.00')
+
+        # Revive the subscription
+        alice.set_payment_instruction(team, '5.00')
+        assert alice.get_due(team) == Decimal('0.00')
 
 
     # get_age_in_seconds - gais
@@ -721,11 +659,11 @@ class Tests(Harness):
 
     # archive
 
-    def test_archive_fails_if_ctr_not_run(self):
+    def test_archive_fails_for_team_owner(self):
         alice = self.make_participant('alice')
-        self.make_participant('bob', claimed_time='now').set_tip_to(alice, Decimal('1.00'))
+        self.make_team(owner=alice)
         with self.db.get_cursor() as cursor:
-            pytest.raises(alice.StillReceivingTips, alice.archive, cursor)
+            pytest.raises(alice.StillATeamOwner, alice.archive, cursor)
 
     def test_archive_fails_if_balance_is_positive(self):
         alice = self.make_participant('alice', balance=2)
@@ -750,3 +688,10 @@ class Tests(Harness):
         payload = self.db.one("SELECT * FROM events WHERE payload->>'action' = 'archive'").payload
         assert payload['values']['old_username'] == 'alice'
         assert payload['values']['new_username'] == archived_as
+
+
+    # suggested_payment
+
+    def test_suggested_payment_is_zero_for_new_user(self):
+        alice = self.make_participant('alice')
+        assert alice.suggested_payment == 0

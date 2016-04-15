@@ -1,23 +1,21 @@
-{% from 'templates/avatar-url.html' import avatar_url with context %}
+{% from 'templates/avatar-url.html' import avatar_img with context %}
 
 {% set account = accounts.get('venmo', None) %}
 <tr class="{{ 'has-avatar' if account }}">
     <td class="account-type">
         <div class="sanity-preserving-wrapper">
             {% if account != None %}
-                <img class="avatar" src="{{ avatar_url(account) }}"/>
+                {{ avatar_img(account) }}
             {% endif %}
-          <img class="platform" src="{{ website.asset_url }}/venmo.png" />
+          <img class="platform" src="{{ website.asset('platforms/venmo.png') }}" />
         </div>
     </td>
     <td class="account-details">
-        {% if account == None %}
-            <span class="none">None</span>
-        {% else %}
-            <a class="account-username" rel="me" href="{{ account.html_url|e }}"
-                >{{ account.user_name|e }}
+        {% if account %}
+            <a class="account-username" rel="me" href="{{ account.html_url }}"
+                >{{ account.user_name }}
                 {% if account.display_name and account.display_name != account.user_name %}
-                    ({{ account.display_name|e }})
+                    ({{ account.display_name }})
                 {% endif %}
             </a>
         {% endif %}
@@ -28,12 +26,12 @@
         {% if account == None %}
             {% if not user.ANON and user.participant == participant %}
                 {% call auth_button('venmo', 'connect') %}
-                    + Add
+                    {{ _("+ Add") }}
                 {% endcall %}
             {% endif %}
         {% else %}
             {% if user.participant == participant %}
-                <div class="account-delete" title="Disconnect"
+                <div class="account-delete" title="{{ _('Disconnect') }}"
                         data-platform="venmo"
                         data-user_id="{{ account.user_id }}">
                 </div>

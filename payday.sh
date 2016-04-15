@@ -15,13 +15,13 @@ cd "`dirname $0`"
 # --help
 # ======
 
-if [ $# = 0 ]; then
+if [ $# = 0 -o "$1" = "" ]; then
     echo
     echo "Usage: $0 <number> [\"for_real_please\"]"
     echo
-    echo "  This is a payday wrapper script for Gittip. It runs payday, logging to a file."
+    echo "  This is a payday wrapper script for Gratipay. It runs payday, logging to a file."
     echo "  You must pass at least one argument, a small integer indicating which week of "
-    echo "  Gittip you are running (it's only used to decide where to log). If you pass a"
+    echo "  Gratipay you are running (it's only used to decide where to log). If you pass a"
     echo "  second arg then it must be the string \"for_real_please\", and in that case we"
     echo "  try to run against the production database. Without that string we run using "
     echo "  your local.env configuration."
@@ -51,7 +51,7 @@ confirm () {
 require () {
     if [ ! `which $1` ]; then
         echo "The '$1' command was not found."
-        return 1 
+        exit 1
     fi
     return 0
 }
@@ -67,9 +67,9 @@ start () {
 # ====
 
 if [ "$2" == "for_real_please" ]; then
-    LOG="../paydays/gittip-$1.log"
+    LOG="../logs/payday/gratipay-$1.log"
 else
-    LOG="../paydays/test-$1.log"
+    LOG="../logs/payday/test-$1.log"
 fi
 
 if [ -f $LOG ]; then
@@ -80,24 +80,27 @@ else
     RUN="Run"
 fi
 
-if [ $1 ]; then
-    require foreman
-    confirm "$RUN payday #$1?"
-    if [ $? -eq 0 ]; then
-        if [ "$2" == "" ]; then
-            start
-            honcho run -e defaults.env,local.env ./env/bin/payday >> $LOG 2>&1
-        else 
-            if [ "$2" == "for_real_please" ]; then
-                confirm "$RUN payday #$1 FOR REAL?!?!?!??!?!?"
-                if [ $? -eq 0 ]; then
-                    start
-                    heroku config -s | foreman run -e /dev/stdin \
-                        ./env/bin/payday >> $LOG 2>&1
-                fi
-            else
-                echo "Your second arg was $2. Wazzat mean?"
-            fi
-        fi
-    fi
-fi
+export PATH="./env/bin:$PATH"
+
+require ./env/bin/honcho
+require heroku
+
+confirm "$RUN payday #$1?" || exit 0
+case "$2" in
+    "")
+        start
+        honcho run -e defaults.env,local.env ./env/bin/payday >>$LOG 2>&1 &
+        ;;
+    "for_real_please")
+        confirm "$RUN payday #$1 FOR REAL?!?!?!??!?!?" || exit 0
+        start
+        heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin ./env/bin/payday >>$LOG 2>&1 &
+        ;;
+    *)
+        echo "Your second arg was $2. Wazzat mean?"
+        exit 1
+        ;;
+esac
+
+disown -a
+tail -f $LOG

@@ -1,17 +1,12 @@
 {% extends "templates/base.html" %}
-{% block box %}
-    {% set current_page = path.raw.split('/')[2] %}
+{% block sidebar %}
+    {% set current_page = request.path.raw.split('/')[2] %}
+    {% set current_page = current_page if current_page in ('features', 'policies', 'security') else '' %}
     {% set nav_base = "/about" %}
-    <div class="nav">
-        {% set pages = [('/', 'About'), ('/faq.html', 'FAQ'), ('/teams/', 'Teams')] %}
-        {% include "templates/nav.html" %}
-    </div>
-    <div class="nav level-1">
-        {% set pages = [('/stats.html', 'Stats'), ('/charts.html', 'Charts')] %}
-        {% include "templates/nav.html" %}
-    </div>
-    <div class="nav level-2">
-        {% set pages = [('/terms/', 'Terms'), ('/privacy/', 'Privacy'), ('/fraud/', 'Fraud'), ('/dnt.html', 'DNT')] %}
-        {% include "templates/nav.html" %}
-    </div>
+    {% set pages = [ ('/', _('Basic Info'))
+                   , ('/features/', _('Features'))
+                   , ('/policies/', _('Policies'))
+                   , ('/security', _('Security'))
+                    ] %}
+    {% include "templates/nav.html" %}
 {% endblock %}

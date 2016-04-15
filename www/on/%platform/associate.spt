@@ -2,52 +2,66 @@ from base64 import b64decode
 import json
 
 from aspen import log, resources, Response
+from requests_oauthlib.oauth1_session import TokenRequestDenied
 
-from gittip import canonical_scheme, canonical_host
-from gittip.models.account_elsewhere import AccountElsewhere
-from gittip.models.participant import NeedConfirmation
+from gratipay.models.account_elsewhere import AccountElsewhere
+from gratipay.models.participant import NeedConfirmation
 
 [-----------------------------]
 
-platform = getattr(website.platforms, path['platform'], None)
+platform = getattr(website.platforms, request.path['platform'], None)
 if platform is None:
     raise Response(404)
 
 # Get the query id from the querystring
-query_id = platform.get_query_id(qs)
+query_id = platform.get_query_id(request.qs)
 
 # Check that we have a cookie that matches the query id (CSRF prevention)
 cookie_name = (platform.name+'_'+query_id).encode('ascii')
 try:
-    query_data, action, then, action_user_name = \
-        json.loads(b64decode(request.headers.cookie[cookie_name].value))
+    cookie_value = request.headers.cookie[cookie_name].value
 except KeyError:
     raise Response(400, 'Missing cookie')
+if not cookie_value:
+    raise Response(400, 'Empty cookie')
+query_data, action, then, action_user_id = json.loads(b64decode(cookie_value))
+then = b64decode(then)  # double-b64encoded to avoid other encoding issues w/ qs
 
 # Finish the auth process, the returned session is ready to use
-url = canonical_scheme+'://'+canonical_host+request.line.uri.raw
-sess = platform.handle_auth_callback(url, query_id, query_data)
+url = website.base_url+request.line.uri.raw
+try:
+    sess = platform.handle_auth_callback(url, query_id, query_data)
+except TokenRequestDenied as e:
+    raise Response(502, _("{0} returned an error, please try again later.",
+                          platform.display_name))
 
 # Get the user's info from the platform's API and upsert it in the DB
 account = AccountElsewhere.upsert(platform.get_user_self_info(sess))
 
-if action_user_name and account.user_name != action_user_name:
-    claimed_account = AccountElsewhere.upsert(platform.get_user_info(action_user_name))
+if action_user_id and account.user_id != action_user_id:
+    claimed_account = AccountElsewhere.upsert(platform.get_user_info('user_id', action_user_id))
     if not claimed_account.is_team:
-        then = '/on/%s/%s/failure.html?action=%s'
-        request.redirect(then % (platform.name, action_user_name, action))
+        then = '/on/%s/%s/failure.html'
+        website.redirect(then % (platform.name, claimed_account.gratipay_slug))
     if not platform.is_team_admin(claimed_account.user_name, sess):
-        then = '/on/%s/%s/failure.html?action=%s&team=true'
-        request.redirect(then % (platform.name, action_user_name, action))
+        then = '/on/%s/%s/failure.html?team=true'
+        website.redirect(then % (platform.name, claimed_account.gratipay_slug))
     account = claimed_account
 
-log('%s user "%s" wants to %s' % (platform.name, account.user_name, action))
+log('%s user "%s" wants to %s' % (platform.name, account.user_id, action))
 
 if action == 'opt-in':
     if platform not in website.signin_platforms or account.is_team:
         raise Response(400)
-    user, newly_claimed = account.opt_in(account.user_name)
+    suggested_username = account.user_name or (account.email or '').split('@')[0] or account.display_name
+    user, newly_claimed = account.opt_in(suggested_username)
     user.sign_in(response.headers.cookie)
+    try:
+        user.participant.add_signin_notifications()
+    except Exception as e:
+        if website.env.raise_signin_notifications:
+            raise
+        website.tell_sentry(e, state)
 
 elif action == 'connect':
     if user.ANON:
@@ -55,18 +69,14 @@ elif action == 'connect':
     try:
         user.participant.take_over((platform.name, account.user_id))
     except NeedConfirmation, obstacles:
-        # XXX Eep! Internal redirect! Really?!
-        request.internally_redirected_from = request.fs
-        request.fs = website.www_root + '/on/confirm.html.spt'
-        request.resource = resources.get(request)
-        raise request.resource.respond(request)
-
-elif action in {'lock', 'unlock'}:
-    account.set_is_locked(action == 'lock')
+        token, expires = account.make_connect_token()
+        response.set_cookie(b'connect_%s' % account.id, token, expires)
+        website.redirect('/on/confirm.html?id=%s' % account.id, response=response)
 
 else:
     raise Response(400)
 
-response.redirect(then)
+response.erase_cookie(cookie_name)
+website.redirect(then, response=response)
 
 [-----------------------------] text/plain

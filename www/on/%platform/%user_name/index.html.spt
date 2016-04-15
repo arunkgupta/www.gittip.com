@@ -1,150 +1,110 @@
-"""External user page on Gittip.
+# encoding: utf8
+"""External user page on Gratipay.
 """
 
 from base64 import b64decode, b64encode
 
 from aspen import Response
 
-from gittip.models.account_elsewhere import *
+from gratipay.models.account_elsewhere import *
 
 [-----------------------------------------------------------------------------]
 
-platform, account = get_account_elsewhere(request)
-
-if account.participant.is_claimed:
-    request.redirect('/%s/' % account.participant.username)
-
-title = username = user_name = account.user_name
-locked = account.is_locked
+platform, account = get_account_elsewhere(website, state)
 participant = account.participant
+
+if participant.is_claimed or participant.is_closed:
+    website.redirect('/%s/' % participant.username)
+
+banner = friendly_name = account.friendly_name
+user_id = account.user_id
 is_team = account.is_team
-allow_pledges = not locked and (not is_team or platform.allows_team_connect)
 
 if is_team:
-    page_url = b64decode(qs.get('page', ''))
-    members, nmembers, pages_urls = platform.get_team_members(user_name, page_url)
+    page_url = b64decode(request.qs.get('page', ''))
+    members, nmembers, pages_urls = platform.get_team_members(account, page_url)
     members = AccountElsewhere.get_many(platform.name, members)
     if not members:
         nmembers = 0
-        team_description = 'is a private team'
+        team_description = _("{0} is a private team", friendly_name)
     elif nmembers == -1:
-        team_description = 'is a big team'
+        team_description = _("{0} is a big team", friendly_name)
     else:
-        team_description = 'is a team with'
+        team_description = ngettext("{0} is a team with {n} public member",
+                                    "{0} is a team with {n} public members",
+                                    nmembers, friendly_name)
     allow_team_connect = platform.allows_team_connect
-    if user.ANON or not user.participant.IS_PLURAL:
+    if user.ANON:
         allow_team_connect = False
     if allow_team_connect:
         user_accounts = user.participant.get_accounts_elsewhere()
         if len(user_accounts) == 1 and platform.name in user_accounts:
             allow_team_connect = False
 
-if locked:
-    number = -2
-    description = 'has opted out of Gittip.'
-elif is_team and not allow_pledges:
-    number = nmembers
-    description = team_description
-else:
-    number = participant.get_number_of_backers()
-    description = 'has'
-
+suppress_sidebar = True
 [-----------------------------------------------------------------------------]
-{% from 'templates/avatar-url.html' import avatar_url with context %}
+{% from 'templates/avatar-url.html' import avatar_img with context %}
 
 {% extends "templates/base.html" %}
 
 {% block heading %}
-    <h2 class="top"><span>{{ platform.name }}</span></h2>
+    <h1>{{ platform.name }} /
+        <a href="{{ account.html_url }}">{{ friendly_name }}</a>
+    </h1>
 {% endblock %}
 
-{% block scripts %}
-  {% if allow_pledges %}
-    <script>$(document).ready(Gittip.tips.init);</script>
-  {% endif %}
-
-  {{ super() }}
+{% block banner %}
+<a class="elsewhere" href="{{ account.html_url }}">
+    <div class="avatar">
+        {{ avatar_img(account) }}
+        <img class="platform" src="{{ platform.logo }}" />
+    </div>
+    {{ super () }}
+</a>
 {% endblock %}
 
-{% block box %}
-
-<table class="on-elsewhere">
-    <tr>
-        <td class="picture">
-            <img src="{{ avatar_url(account) }}" />
-        </td>
-        <td class="ready">
-            <h2>
-                <a href="{{ account.html_url|e}}">{{ user_name|e }}</a>
-                {{ description }}
-            </h2>
-            {% if number >= 0 %}
-                <div class="number">{{ number }}</div>
-                <div class="unit">
-                    {% if allow_pledges %}
-                        {{ 'person' if number == 1 else 'people' }} ready to give
-                    {% else %}
-                        public member{{ '' if number == 1 else 's' }}
-                    {% endif %}
-                </div>
-            {% endif %}
-        </td>
-        <td class="offset"></td>
-    </tr>
-</table>
-
-{% if allow_pledges %}
-    {% include "templates/participant.tip.html" %}
-{% endif %}
-
+{% block sidebar %}
+<div class="mono">
+    <table>
+        {% if account.is_team %}
+        <tr>
+            <td class="left">{{ _("Team Members") }}</td>
+            <td class="right">{{ nmembers if nmembers > 0 else _('A Lot') }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
 {% endblock %}
 
-{% block page %}
-
+{% block content %}
 {% from 'templates/auth.html' import auth_button with context %}
 
-<div class="col0">
-  {% if locked %}
+{% if is_team %}
 
-    {% if is_team %}
-        <p>If you are an administrator of this {{ platform.display_name }} team
-        account, you can unlock it to allow people to pledge tips to your team
-        on Gittip.</p>
-    {% else %}
-        <p>If you are <a href="{{ account.html_url|e}}">{{ user_name|e }}</a>
-        on {{ platform.name }}, you can unlock your account to allow people
-        to pledge tips to you on Gittip.</p>
-    {% endif %}
-
-    {% call auth_button(platform.name, 'unlock', user_name) %}
-        Unlock
+  {% if allow_team_connect %}
+    <h2>{{ _("{0} has not joined Gratipay.", user_id) }}</h2>
+    <p>{{ _("Are you an administrator of this {0} team account? Connect it "
+            "to your Gratipay account.",
+            platform.display_name) }}</p>
+    {% call auth_button(platform.name, 'connect', user_id) %}
+        {{ _("Connect team account") }}
     {% endcall %}
+  {% endif %}
 
-  {% elif is_team %}
+{% else %}
 
-    {% if allow_team_connect %}
-        <h2>{{ user_name|e }} has not joined Gittip.</h2>
-        <p>Are you an administrator of this {{ platform.display_name }} team
-        account? Connect it to your Gittip account.</p>
-        {% call auth_button(platform.name, 'connect', user_name) %}
-            Connect team account
-        {% endcall %}
-    {% endif %}
-
-  {% else %}
-
-    <h2>{{ user_name|e }} has not joined Gittip.</h2>
+    <h2>{{ _("{0} has not joined Gratipay.", friendly_name) }}</h2>
 
     {% if platform in website.signin_platforms or not user.ANON %}
         {% if user.ANON %}
-            <p>Is this you? We never collect money for you unless you join.</p>
-            {% call auth_button(platform.name, 'opt-in', user_name) %}
-                Join Gittip
+            <p>{{ _("Is this you? You can join Gratipay with a couple clicks:") }}</p>
+            {% call auth_button(platform.name, 'opt-in', user_id) %}
+                {{ _("Join Gratipay") }}
             {% endcall %}
         {% else %}
-            <p>Is this yours? Connect it to your Gittip account.</p>
-            {% call auth_button(platform.name, 'connect', user_name) %}
-                Connect
+            <p>{{ _("Is this yours? Connect it to your Gratipay account.") }}</p>
+            {% call auth_button(platform.name, 'connect', user_id) %}
+                {{ _("Connect") }}
             {% endcall %}
         {% endif %}
     {% endif %}
@@ -153,119 +113,55 @@ else:
 
   {% if user.ANON %}
 
-    <h2>What is Gittip?</h2>
+    <h2>{{ _("What is Gratipay?") }}</h2>
 
-    <p>Gittip is a way to thank and support your favorite artists, musicians,
-    writers, programmers, etc. by setting up a small weekly cash gift to them.
-    <a href="/about/">Read more ...</a></p>
-
-  {% endif %}
-
-  {% if user.ANON and allow_pledges %}
-
-    <h2>Don't like what you see?</h2>
-
-    <p>If you are an owner of this {{ platform.display_name }} account, you can
-    explicitly opt out of Gittip by locking it. We don't allow new pledges to
-    locked accounts.</p>
-
-    {% call auth_button(platform.name, 'lock', user_name) %}
-        Lock
-    {% endcall %}
+    <p>{{ _("Gratipay provides payments and payroll for open work.") }}
+    <a href="/about/">{{ _("Learn more") }}</a></p>
 
   {% endif %}
 
-  {% if is_team and not locked %}
-
-    {% if allow_pledges and members %}
-        <h2 style="text-align: center">
-            {{ user_name|e }} {{ team_description }}
-            {% if nmembers > 0 %}
-                {{ nmembers }} public member{{ '' if nmembers == 1 else 's' }}
-            {% endif %}
-        </h2>
-    {% endif %}
+  {% if is_team %}
 
     {% if members %}
     <table id="members">
-    <thead><tr><th>Member</th><th>Status</th></tr></thead>
+    <thead><tr><th>{{ _("Member") }}</th><th>{{ _("Status") }}</th></tr></thead>
     <tbody>
 
     {% for member in members %}
-        {% set on_gittip = member.participant.is_claimed %}
-        {% set declines_gifts = not member.participant.accepts_tips or member.is_locked %}
-        <tr class="{{ 'declines' if declines_gifts }} {{ 'not-on-gittip' if not on_gittip }}">
-            {% if on_gittip %}
+        {% set on_gratipay = member.participant.is_claimed %}
+        <tr class="{{ 'not-on-gratipay' if not on_gratipay }}">
+            {% if on_gratipay %}
                 <td>
                     <a href="/{{ member.participant.username }}/">
-                        <img src="{{ avatar_url(member.participant) }}" />
-                        {{member.participant.username|e}}
+                        {{ avatar_img(member.participant) }}
+                        {{member.participant.username}}
                     </a>
                 </td>
                 <td>
-                    {% if declines_gifts %}
-                        declines gifts (is a patron)
-                    {% else %}
-                        accepts gifts
-                    {% endif %}
+                    {{ _("accepts gifts") }}
                 </td>
             {% else %}
                 <td>
-                    <a href="/on/{{platform.name}}/{{member.user_name|e}}/">
-                        <img src="{{ avatar_url(member) }}" />
-                        {{member.user_name|e}}
+                    <a href="/on/{{platform.name}}/{{member.gratipay_slug}}/">
+                        {{ avatar_img(member) }}
+                        {{ member.friendly_name }}
                     </a>
                 </td>
                 <td>
-                    {% if member.is_locked %}
-                        declines gifts (opted out)
-                    {% else %}
-                        hasn't joined Gittip yet
-                    {% endif %}
+                    {{ _("hasn't joined Gratipay yet") }}
                 </td>
             {% endif %}
         </tr>
     {% endfor %}
 
     {% if pages_urls %}
-        <tr>
-            <td>
-                {% if pages_urls.get('prev') %}
-                    <a href="?page={{ b64encode(pages_urls['prev']) }}">
-                        ⇠ Previous
-                    </a>
-                {% endif %}
-            </td>
-            <td style="text-align: right">
-                {% if pages_urls.get('next') %}
-                    <a href="?page={{ b64encode(pages_urls['next']) }}">
-                        Next ⇢
-                    </a>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                {% if pages_urls.get('first') %}
-                    <a href="?page={{ b64encode(pages_urls['first']) }}">
-                        ⇤ First
-                    </a>
-                {% endif %}
-            </td>
-            <td style="text-align: right">
-                {% if pages_urls.get('last') %}
-                    <a href="?page={{ b64encode(pages_urls['last']) }}">
-                        Last ⇥
-                    </a>
-                {% endif %}
-            </td>
-        </tr>
+        {% from 'templates/pagination.html' import pages_links with context %}
+        <tr><td colspan="2">{{ pages_links(pages_urls) }}</td></tr>
     {% endif %}
 
     </tbody>
     </table>
-    {% endif %}
-
   {% endif %}
-</div>
+
+{% endif %}
 {% endblock %}

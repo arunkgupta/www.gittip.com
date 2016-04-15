@@ -1,0 +1,57 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from aspen import Response
+import balanced
+import braintree
+
+from gratipay.billing.exchanges import repr_exception
+from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.utils import bitcoin, get_participant
+
+[---]
+
+request.allow('POST')
+participant = get_participant(state, restrict=True)
+
+network = request.body['network']
+address = request.body['address']
+
+old_route = ExchangeRoute.from_network(participant, network)
+
+change = getattr(old_route, 'address', '') != address
+
+if change:
+
+    if not address:
+        raise Response(400, _("The address cannot be empty."))
+
+    if network == 'braintree-cc':
+        result = braintree.PaymentMethod.create({
+            "customer_id": participant.braintree_customer_id,
+            "payment_method_nonce": address,
+            "options": {"verify_card": True}
+        })
+
+        if result.is_success:
+            ExchangeRoute.insert(participant, network, result.payment_method.token)
+        else:
+            raise Response(400, result.message)
+
+    elif network == 'paypal':
+        if address not in participant.get_verified_email_addresses():
+            raise Response(400, _("Only verified email addresses allowed."))
+        ExchangeRoute.insert(participant, network, address)
+
+    elif network == 'bitcoin':
+        if not bitcoin.validate(address):
+            raise Response(400, _("This is not a valid Bitcoin address."))
+        ExchangeRoute.insert(participant, network, address)
+
+    else:
+        raise Response(400, 'unknown network')
+
+    if old_route:
+        old_route.invalidate()
+
+[---] application/json via json_dump
+{}

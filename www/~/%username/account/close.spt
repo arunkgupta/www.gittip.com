@@ -1,0 +1,3 @@
+[---]
+website.redirect('../settings/close', base_url='')
+[---] text/plain

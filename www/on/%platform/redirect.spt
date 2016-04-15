@@ -3,21 +3,21 @@ from datetime import timedelta
 import json
 
 from aspen import Response
-from gittip.elsewhere import ACTIONS
+from gratipay.elsewhere import ACTIONS
 
-COOKIE_TIMEOUT = timedelta(minutes=2)
+COOKIE_TIMEOUT = timedelta(minutes=5)
 
 [-----------------------------]
 
-if not POST:
-    raise Response(405)
+request.allow('POST')
 
-platform = getattr(website.platforms, path['platform'], None)
+platform = getattr(website.platforms, request.path['platform'], None)
 if platform is None:
     raise Response(404)
 
+body = request.body
 try:
-    action, then, user_name = body['action'], body['then'], body['user_name']
+    action, then, user_id = body['action'], body['then'], body['user_id']
 except KeyError:
     raise Response(400)
 
@@ -27,9 +27,9 @@ if action not in ACTIONS:
 url, query_id, query_data = platform.get_auth_url(user=user)
 
 cookie_name = (platform.name+'_'+query_id).encode('ascii')
-cookie_value = b64encode(json.dumps([query_data, action, then, user_name]))
+cookie_value = b64encode(json.dumps([query_data, action, then, user_id]))
 response.set_cookie(cookie_name, cookie_value, expires=COOKIE_TIMEOUT)
 
-response.redirect(url)
+website.redirect(url, response=response, base_url='')
 
 [-----------------------------] text/plain

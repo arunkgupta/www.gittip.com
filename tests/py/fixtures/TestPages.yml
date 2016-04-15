@@ -1,0 +1,212 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/users/gratipay
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA52TT2+cMBDFv4vPu7HZP1nJUtXeeuwlp1xWBhwYydiWbYi2KN+9z8C2ZA+VyAlj
+        zfvN89PMyIxryDLJmqASeXVjO0Y1k8XldBKX446pQSUVrn0wKGpT8lFyPl/Gp4ZS25d91KFyNmmb
+        nirX8Z4v6u/DtyN4QM+QDGa4eIB5WkCzGrTIV3ba1JmH/nPfqXxV+OaMce9QP7r9XwP+VwVj85ls
+        8wUCVCN3qdUIC0/4yA+nmLaZmRQjz58r1ZkRkX7Q9SZDiwZ23i2cjDxo7yZYX8YqkE/k7DZjn5Qg
+        udAoS78xM1tJUEYAsqVtFiYFlHrAoG2TzpKR+0CDqm45iqArTQOC/QLuQQtaunmN2f61SiXHTUlf
+        Vd3lBXtTJuods6rLhT//bRuG2Ct7Y9L2xuxYiYVcbdp9vKdZB9K4asr8Xq47RXkzY++9C+nHuh7l
+        LQWtSoOWC53c/ej70lB1nVOVR6z6cjPNIJPivg5YqNUfxnz6qwBOiE8ldD+I4rAX533x/CIKKS7y
+        fH5F997Xn2qe9+KwP1xeCiHFSYrilX38AQm1yoCBBAAA
+    headers:
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"6490757473225931ddc5f33e93720bd4"]
+      last-modified: ['Sat, 27 Feb 2016 10:04:01 GMT']
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/orgs/gratipay/public_members
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA63X327aMBgF8HfJNWqAJBAqTXuKXU0TMsEEayGOEgPqUN99Dv6bTKP6/PmqFfI5
+        nKb5CfLzkTS8Zm3ynhDSHtmQLBJ2TN7zXZll+XaRkBsRpN9f+0YeOQvRDe9pql4c3momztfDdaB9
+        xVtBW/FW8Ut6TXX6++1bJvvqXpeMxYl8YVbWMV2k0rJtSO2Ys7g0s3dX7/o8bI+deNPwu0zOl/6/
+        PLUZOUn9ztoanJeZR8rFmcqLJKd/jn8wGwRkyPP8Ix1/7NlxbBjkNe/pETBGJ+SUeytXPNKedvxZ
+        dT0MVc86wXgLGTXJyR7e16Rlfwi0R+bGm2qcA3n753mZozd5W0GCKvBIu57dSPUxXoKeVpTd5OUE
+        l82Sskt8dFTexT/kv3q8uEzQPTleRkAn0gz0c+FAVaQTbXZZynPjnV+U+brIAkWpMAKUN+Y1Ke8g
+        CJXJhbOaNWBg2SoULdsSD5er9FmG8LJNUGA2CCdmo3GQeUsmQIHMGt7S1XJVamfr9WaTlYHOVBjj
+        zFvzBTTvJEyaCSKozSpQ1mwXDputiajNdaK52SqwN5sMAGezkcR5WxDk6p7WdUPNl8Vsty42oeJU
+        GCHOG/ManHcQ5M3kwrnNGjDabBUKm22JZ81VYqnZJqg0G4RDs9E4zrwlCGYXIsTht/5Yy7br3TL4
+        c02nEczsmNfI7DEQMZUKBzbJY3jpIhQu3RGPlinEwtI9UFY6Bkelg3FI2RUIUD0/M9GRa2NRlbus
+        2IY+lGUqjUA1GfQa1uQoCJdLhgP7pwODzCtDQfN64mHzS7HgvC4oOi8Kh+eF4+CbrEEAFLQ6C94y
+        469YFWW5C3xWU2GEPn/Na3z+SZA9GwynN6/AyHNdKHiuJp47rxPLzlVB1bkkHJ3LxjHnb8GQu/Pm
+        NPBWf43cLdd5GfqspsIYcW7MF+DcQZg3nUNwmzagtJkqHDbTEtGarURTM01gaSYYAM1EIzlzSxDM
+        7vKbZZFttbJVludFEfi5psIIZW7La2TuHMiYjoUTmxZghJkmFDBTEs+XbcTyMkVQXSYHx2WScWy5
+        HVBav/4Cj6d/8JoeAAA=
+    headers:
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"4e3b9af23aa5f8098934d9f04ea33c49"]
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/users/gratipay
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA52TT2+cMBDFv4vPu7HZP1nJUtXeeuwlp1xWBhwYydiWbYi2KN+9z8C2ZA+VyAlj
+        zfvN89PMyIxryDLJmqASeXVjO0Y1k8XldBKX446pQSUVrn0wKGpT8lFyPl/Gp4ZS25d91KFyNmmb
+        nirX8Z4v6u/DtyN4QM+QDGa4eIB5WkCzGrTIV3ba1JmH/nPfqXxV+OaMce9QP7r9XwP+VwVj85ls
+        8wUCVCN3qdUIC0/4yA+nmLaZmRQjz58r1ZkRkX7Q9SZDiwZ23i2cjDxo7yZYX8YqkE/k7DZjn5Qg
+        udAoS78xM1tJUEYAsqVtFiYFlHrAoG2TzpKR+0CDqm45iqArTQOC/QLuQQtaunmN2f61SiXHTUlf
+        Vd3lBXtTJuods6rLhT//bRuG2Ct7Y9L2xuxYiYVcbdp9vKdZB9K4asr8Xq47RXkzY++9C+nHuh7l
+        LQWtSoOWC53c/ej70lB1nVOVR6z6cjPNIJPivg5YqNUfxnz6qwBOiE8ldD+I4rAX533x/CIKKS7y
+        fH5F997Xn2qe9+KwP1xeCiHFSYrilX38AQm1yoCBBAAA
+    headers:
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"6490757473225931ddc5f33e93720bd4"]
+      last-modified: ['Sat, 27 Feb 2016 10:04:01 GMT']
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/orgs/gratipay/public_members
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA63X327aMBgF8HfJNWqAJBAqTXuKXU0TMsEEayGOEgPqUN99Dv6bTKP6/PmqFfI5
+        nKb5CfLzkTS8Zm3ynhDSHtmQLBJ2TN7zXZll+XaRkBsRpN9f+0YeOQvRDe9pql4c3momztfDdaB9
+        xVtBW/FW8Ut6TXX6++1bJvvqXpeMxYl8YVbWMV2k0rJtSO2Ys7g0s3dX7/o8bI+deNPwu0zOl/6/
+        PLUZOUn9ztoanJeZR8rFmcqLJKd/jn8wGwRkyPP8Ix1/7NlxbBjkNe/pETBGJ+SUeytXPNKedvxZ
+        dT0MVc86wXgLGTXJyR7e16Rlfwi0R+bGm2qcA3n753mZozd5W0GCKvBIu57dSPUxXoKeVpTd5OUE
+        l82Sskt8dFTexT/kv3q8uEzQPTleRkAn0gz0c+FAVaQTbXZZynPjnV+U+brIAkWpMAKUN+Y1Ke8g
+        CJXJhbOaNWBg2SoULdsSD5er9FmG8LJNUGA2CCdmo3GQeUsmQIHMGt7S1XJVamfr9WaTlYHOVBjj
+        zFvzBTTvJEyaCSKozSpQ1mwXDputiajNdaK52SqwN5sMAGezkcR5WxDk6p7WdUPNl8Vsty42oeJU
+        GCHOG/ManHcQ5M3kwrnNGjDabBUKm22JZ81VYqnZJqg0G4RDs9E4zrwlCGYXIsTht/5Yy7br3TL4
+        c02nEczsmNfI7DEQMZUKBzbJY3jpIhQu3RGPlinEwtI9UFY6Bkelg3FI2RUIUD0/M9GRa2NRlbus
+        2IY+lGUqjUA1GfQa1uQoCJdLhgP7pwODzCtDQfN64mHzS7HgvC4oOi8Kh+eF4+CbrEEAFLQ6C94y
+        469YFWW5C3xWU2GEPn/Na3z+SZA9GwynN6/AyHNdKHiuJp47rxPLzlVB1bkkHJ3LxjHnb8GQu/Pm
+        NPBWf43cLdd5GfqspsIYcW7MF+DcQZg3nUNwmzagtJkqHDbTEtGarURTM01gaSYYAM1EIzlzSxDM
+        7vKbZZFttbJVludFEfi5psIIZW7La2TuHMiYjoUTmxZghJkmFDBTEs+XbcTyMkVQXSYHx2WScWy5
+        HVBav/4Cj6d/8JoeAAA=
+    headers:
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"4e3b9af23aa5f8098934d9f04ea33c49"]
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/users/gratipay
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA52TT2+cMBDFv4vPu7HZP1nJUtXeeuwlp1xWBhwYydiWbYi2KN+9z8C2ZA+VyAlj
+        zfvN89PMyIxryDLJmqASeXVjO0Y1k8XldBKX446pQSUVrn0wKGpT8lFyPl/Gp4ZS25d91KFyNmmb
+        nirX8Z4v6u/DtyN4QM+QDGa4eIB5WkCzGrTIV3ba1JmH/nPfqXxV+OaMce9QP7r9XwP+VwVj85ls
+        8wUCVCN3qdUIC0/4yA+nmLaZmRQjz58r1ZkRkX7Q9SZDiwZ23i2cjDxo7yZYX8YqkE/k7DZjn5Qg
+        udAoS78xM1tJUEYAsqVtFiYFlHrAoG2TzpKR+0CDqm45iqArTQOC/QLuQQtaunmN2f61SiXHTUlf
+        Vd3lBXtTJuods6rLhT//bRuG2Ct7Y9L2xuxYiYVcbdp9vKdZB9K4asr8Xq47RXkzY++9C+nHuh7l
+        LQWtSoOWC53c/ej70lB1nVOVR6z6cjPNIJPivg5YqNUfxnz6qwBOiE8ldD+I4rAX533x/CIKKS7y
+        fH5F997Xn2qe9+KwP1xeCiHFSYrilX38AQm1yoCBBAAA
+    headers:
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"6490757473225931ddc5f33e93720bd4"]
+      last-modified: ['Sat, 27 Feb 2016 10:04:01 GMT']
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/orgs/gratipay/public_members
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA63X327aMBgF8HfJNWqAJBAqTXuKXU0TMsEEayGOEgPqUN99Dv6bTKP6/PmqFfI5
+        nKb5CfLzkTS8Zm3ynhDSHtmQLBJ2TN7zXZll+XaRkBsRpN9f+0YeOQvRDe9pql4c3momztfDdaB9
+        xVtBW/FW8Ut6TXX6++1bJvvqXpeMxYl8YVbWMV2k0rJtSO2Ys7g0s3dX7/o8bI+deNPwu0zOl/6/
+        PLUZOUn9ztoanJeZR8rFmcqLJKd/jn8wGwRkyPP8Ix1/7NlxbBjkNe/pETBGJ+SUeytXPNKedvxZ
+        dT0MVc86wXgLGTXJyR7e16Rlfwi0R+bGm2qcA3n753mZozd5W0GCKvBIu57dSPUxXoKeVpTd5OUE
+        l82Sskt8dFTexT/kv3q8uEzQPTleRkAn0gz0c+FAVaQTbXZZynPjnV+U+brIAkWpMAKUN+Y1Ke8g
+        CJXJhbOaNWBg2SoULdsSD5er9FmG8LJNUGA2CCdmo3GQeUsmQIHMGt7S1XJVamfr9WaTlYHOVBjj
+        zFvzBTTvJEyaCSKozSpQ1mwXDputiajNdaK52SqwN5sMAGezkcR5WxDk6p7WdUPNl8Vsty42oeJU
+        GCHOG/ManHcQ5M3kwrnNGjDabBUKm22JZ81VYqnZJqg0G4RDs9E4zrwlCGYXIsTht/5Yy7br3TL4
+        c02nEczsmNfI7DEQMZUKBzbJY3jpIhQu3RGPlinEwtI9UFY6Bkelg3FI2RUIUD0/M9GRa2NRlbus
+        2IY+lGUqjUA1GfQa1uQoCJdLhgP7pwODzCtDQfN64mHzS7HgvC4oOi8Kh+eF4+CbrEEAFLQ6C94y
+        469YFWW5C3xWU2GEPn/Na3z+SZA9GwynN6/AyHNdKHiuJp47rxPLzlVB1bkkHJ3LxjHnb8GQu/Pm
+        NPBWf43cLdd5GfqspsIYcW7MF+DcQZg3nUNwmzagtJkqHDbTEtGarURTM01gaSYYAM1EIzlzSxDM
+        7vKbZZFttbJVludFEfi5psIIZW7La2TuHMiYjoUTmxZghJkmFDBTEs+XbcTyMkVQXSYHx2WScWy5
+        HVBav/4Cj6d/8JoeAAA=
+    headers:
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"4e3b9af23aa5f8098934d9f04ea33c49"]
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+version: 1

@@ -1,24 +1,52 @@
-# Welcome to Gittip [<img height="26px" src="www/assets/%25version/gittip.opengraph.png"/>](https://www.gittip.com/)
+# Welcome to Gratipay [<img height="26px" src="https://raw.githubusercontent.com/gratipay/gratipay.com/master/www/assets/gratipay.opengraph.png"/>](https://gratipay.com/)
 
-[![Build Status](http://img.shields.io/travis/gittip/www.gittip.com/master.svg)](https://travis-ci.org/gittip/www.gittip.com)
-[![Coverage Status](https://img.shields.io/coveralls/gittip/www.gittip.com.svg)](https://coveralls.io/r/gittip/www.gittip.com?branch=master)
-[![HuBoard badge](http://img.shields.io/badge/Hu-Board-7965cc.svg)](https://huboard.com/gittip/www.gittip.com)
-[![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gittip/issues)
+[![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
+[![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gratipay/issues)
 
-Gittip is a weekly gift exchange, helping to create a culture of generosity.
-If you'd like to learn more, check out <https://gittip.com/about>.
-If you'd like to contribute to Gittip, check out <http://building.gittip.com>.
+[Gratipay](http://gratipay.com) provides payments and payroll for open work,
+in order to cultivate an economy of gratitude, generosity, and love.
+If you'd like to learn more, check out <https://gratipay.com/about>.
+If you'd like to contribute to Gratipay, check out <http://inside.gratipay.com>.
 
 Quick Start
 ===========
 
+Local
+-----
+
+Given Python 2.7, Postgres 9.3, and a C/make toolchain:
+
+```shell
+git clone git@github.com:gratipay/gratipay.com.git
+cd gratipay.com
+scripts/bootstrap-debian.sh
+make schema data
+```
+
+And then run
+
+```shell
+make run
+```
+
+to boot the app and/or:
+
+```shell
+make test
+```
+
+to run the tests.
+
+[Read more](#table-of-contents).
+
+
 Vagrant
 -------
 
-Given VirtualBox 4.3 and Vagrant 1.5.4:
+Given VirtualBox 4.3 and Vagrant 1.7.x:
 
-```
-$ vagrant up
+```shell
+vagrant up
 ```
 
 [Read more](#vagrant-1).
@@ -29,47 +57,27 @@ Docker
 
 Given some version(?) of Docker:
 
-```
-$ docker build -t gittip .
-$ docker run -p 8537:8537 gittip
+```shell
+docker build -t gratipay .
+docker run -p 8537:8537 gratipay
 ```
 
 [Read more](#docker-1).
 
 
-Local 
------
-
-Given Python 2.7, Postgres 9.3, and a C/make toolchain:
-
-```
-$ git clone git@github.com:gittip/www.gittip.com.git
-$ cd www.gittip.com
-$ sudo -u postgres createuser --superuser $USER
-$ createdb gittip
-$ make schema data
-$ make run
-```
-
-And/or:
-
-```
-$ make test
-```
-
-
 Table of Contents
 =================
 
- - [Installation](#installation)
+ - [Installing](#installing)
   - [Dependencies](#dependencies)
   - [Building](#building)
   - [Launching](#launching)
+  - [Configuring](#configuring)
   - [Vagrant](#vagrant)
   - [Docker](#docker)
   - [Help!](#help)
- - [Configuration](https://github.com/gittip/www.gittip.com/wiki/Configuration)
- - [Modifying CSS](#modifying-css)
+ - [Modifying CSS and Javascript](#modifying-css-and-javascript)
+ - [Modifying the Database](#modifying-the-database)
  - [Testing](#testing-)
  - [Setting up a Database](#local-database-setup)
  - [API](#api)
@@ -77,33 +85,42 @@ Table of Contents
  - [Glossary](#glossary)
 
 
-Installation
-============
+Installing
+==========
 
-Thanks for hacking on Gittip! Be sure to review
-[CONTRIBUTING](https://github.com/gittip/www.gittip.com/blob/master/CONTRIBUTING.md#readme)
+Thanks for hacking on Gratipay! Be sure to review
+[CONTRIBUTING](https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md#readme)
 as well if that's what you're planning to do.
 
 
 Dependencies
 ------------
 
-Building `www.gittip.com` requires [Python
+Building `gratipay.com` requires [Python
 2.7](http://python.org/download/releases/2.7.4/), and a gcc/make toolchain.
 
-All Python library dependencies are bundled in the repo (under `vendor/`).
-
-To configure local Postgres create default role and database:
-
-    $ sudo -u postgres createuser --superuser $USER
-    $ createdb gittip
+All Python library dependencies are bundled in the repo (under `vendor/`). If
+you are receiving issues from `psycopg2`, please [ensure that its needs are
+met](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psycopg2).
 
 On Debian or Ubuntu you will need the following packages:
-`libpq5-dev`/`libpq-dev`, (includes headers needed to build the `psycopg2` Python library)
-and `python-dev` (includes Python header files for `psycopg2`).
 
-If you are receiving issues from `psycopg2`, please [ensure that its needs are
-met](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psycopg2).
+```shell
+sudo apt-get install postgresql-9.3 postgresql-contrib libpq-dev python-dev
+```
+
+On OS X you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
+
+```shell
+brew install postgresql
+```
+
+To configure local Postgres create default role (if it hasn’t been created already) and database.
+
+```shell
+sudo -u postgres createuser --superuser $USER
+createdb gratipay
+```
 
 If you are getting an error about `unknown argument: '-mno-fused-madd'` when
 running `make`, then add
@@ -111,13 +128,16 @@ running `make`, then add
 `ARCHFLAGS` environment variable and run `make clean env` again (see [this Stack Overflow answer
 for more information](http://stackoverflow.com/a/22355874/347246)):
 
-    $ ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clean env
+```shell
+ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clean env
+```
+
 
 Building
 --------
 
-All Python dependencies (including virtualenv) are bundled with Gittip in the
-vendor/ directory. Gittip is designed so that you don't manage its
+All Python dependencies (including virtualenv) are bundled with Gratipay in the
+vendor/ directory. Gratipay is designed so that you don't manage its
 virtualenv directly and you don't download its dependencies at build
 time.
 
@@ -127,287 +147,346 @@ are stored in default_local.env file while overrides are in local.env.
 To create virtualenv enviroment with all python dependencies installed
 in a sandbox:
 
-    $ make env
+```shell
+make env
+```
 
-If you haven't run Gittip for a while, you can reinstall the dependencies:
+If you haven't run Gratipay for a while, you can reinstall the dependencies:
 
-    $ make clean env
+```shell
+make clean env
+```
 
 Add the necessary schemas and insert dummy data into postgres:
 
-    $ make schema
-    $ make data
+```shell
+make schema
+make fake
+```
 
 
 Launching
 ---------
 
 Once you've installed Python and Postgres and set up a database, you can use
-make to build and launch Gittip:
+make to build and launch Gratipay:
 
-    $ make run
+```shell
+make run
+```
 
 If you don't have make, look at the Makefile to see what steps you need
-to perform to build and launch Gittip. The Makefile is pretty simple and
+to perform to build and launch Gratipay. The Makefile is pretty simple and
 straightforward.
 
-If Gittip launches successfully it will look like this:
+If Gratipay launches successfully it will look like this:
 
-```
+```shell
 $ make run
-./env/bin/honcho -e default_local.env,local.env run ./env/bin/aspen
-pid-27937 thread-47041048338176 (MainThread) Reading configuration from defaults, environment, and command line.
-pid-27937 thread-47041048338176 (MainThread)   changes_reload         False                          default
-pid-27937 thread-47041048338176 (MainThread)   changes_reload         True                           environment variable ASPEN_CHANGES_RELOAD=1
-pid-27937 thread-47041048338176 (MainThread)   charset_dynamic        UTF-8                          default
-pid-27937 thread-47041048338176 (MainThread)   charset_static         None                           default
-pid-27937 thread-47041048338176 (MainThread)   configuration_scripts  []                             default
-pid-27937 thread-47041048338176 (MainThread)   indices                [u'index.html', u'index.json', u'index', u'index.html.spt', u'index.json.spt', u'index.spt'] default
-pid-27937 thread-47041048338176 (MainThread)   list_directories       False                          default
-pid-27937 thread-47041048338176 (MainThread)   logging_threshold      0                              default
-pid-27937 thread-47041048338176 (MainThread)   media_type_default     text/plain                     default
-pid-27937 thread-47041048338176 (MainThread)   media_type_json        application/json               default
-pid-27937 thread-47041048338176 (MainThread)   network_address        ((u'0.0.0.0', 8080), 2)        default
-pid-27937 thread-47041048338176 (MainThread)   network_address        ((u'0.0.0.0', 8537), 2)        environment variable ASPEN_NETWORK_ADDRESS=:8537
-pid-27937 thread-47041048338176 (MainThread)   network_engine         cheroot                        default
-pid-27937 thread-47041048338176 (MainThread)   project_root           None                           default
-pid-27937 thread-47041048338176 (MainThread)   project_root           .                              environment variable ASPEN_PROJECT_ROOT=.
-pid-27937 thread-47041048338176 (MainThread)   renderer_default       stdlib_percent                 default
-pid-27937 thread-47041048338176 (MainThread)   show_tracebacks        False                          default
-pid-27937 thread-47041048338176 (MainThread)   show_tracebacks        True                           environment variable ASPEN_SHOW_TRACEBACKS=1
-pid-27937 thread-47041048338176 (MainThread)   www_root               None                           default
-pid-27937 thread-47041048338176 (MainThread)   www_root               www/                           environment variable ASPEN_WWW_ROOT=www/
-pid-27937 thread-47041048338176 (MainThread) project_root is relative to CWD: '.'.
-pid-27937 thread-47041048338176 (MainThread) project_root set to /home/zbynek/www.gittip.com.
-pid-27937 thread-47041048338176 (MainThread) Found plugin for renderer 'jinja2'
-pid-27937 thread-47041048338176 (MainThread) Won't log to Sentry (SENTRY_DSN is empty).
-pid-27937 thread-47041048338176 (MainThread) Loading configuration file '/home/zbynek/www.gittip.com/configure-aspen.py' (possibly changing settings)
-pid-27937 thread-47041048338176 (MainThread) Renderers (*ed are unavailable, CAPS is default):
-pid-27937 thread-47041048338176 (MainThread)   stdlib_percent
-pid-27937 thread-47041048338176 (MainThread)   stdlib_format
-pid-27937 thread-47041048338176 (MainThread)   JINJA2
-pid-27937 thread-47041048338176 (MainThread)   stdlib_template
-pid-27937 thread-47041048338176 (MainThread) Starting cheroot engine.
-pid-27937 thread-47041048338176 (MainThread) Greetings, program! Welcome to port 8537.
-pid-27937 thread-47041048338176 (MainThread) Aspen will restart when configuration scripts or Python modules change.
-pid-27937 thread-47041048338176 (MainThread) Starting up Aspen website.
+PATH=env/bin:{lots-more-of-your-own-PATH} env/bin/honcho run -e defaults.env,local.env web
+2014-07-22 14:53:09 [1258] [INFO] Starting gunicorn 18.0
+2014-07-22 14:53:09 [1258] [INFO] Listening at: http://0.0.0.0:8537 (1258)
+2014-07-22 14:53:09 [1258] [INFO] Using worker: sync
+2014-07-22 14:53:09 [1261] [INFO] Booting worker with pid: 1261
+pid-1261 thread-140735191843600 (MainThread) Reading configuration from defaults, environment, and command line.
+pid-1261 thread-140735191843600 (MainThread)   changes_reload         False                          default
+pid-1261 thread-140735191843600 (MainThread)   changes_reload         True                           environment variable ASPEN_CHANGES_RELOAD=yes
+pid-1261 thread-140735191843600 (MainThread)   charset_dynamic        UTF-8                          default
+pid-1261 thread-140735191843600 (MainThread)   charset_static         None                           default
+pid-1261 thread-140735191843600 (MainThread)   configuration_scripts  []                             default
+pid-1261 thread-140735191843600 (MainThread)   indices                [u'index.html', u'index.json', u'index', u'index.html.spt', u'index.json.spt', u'index.spt'] default
+pid-1261 thread-140735191843600 (MainThread)   list_directories       False                          default
+pid-1261 thread-140735191843600 (MainThread)   logging_threshold      0                              default
+pid-1261 thread-140735191843600 (MainThread)   media_type_default     text/plain                     default
+pid-1261 thread-140735191843600 (MainThread)   media_type_json        application/json               default
+pid-1261 thread-140735191843600 (MainThread)   project_root           None                           default
+pid-1261 thread-140735191843600 (MainThread)   project_root           .                              environment variable ASPEN_PROJECT_ROOT=.
+pid-1261 thread-140735191843600 (MainThread)   renderer_default       stdlib_percent                 default
+pid-1261 thread-140735191843600 (MainThread)   show_tracebacks        False                          default
+pid-1261 thread-140735191843600 (MainThread)   show_tracebacks        True                           environment variable ASPEN_SHOW_TRACEBACKS=yes
+pid-1261 thread-140735191843600 (MainThread)   www_root               None                           default
+pid-1261 thread-140735191843600 (MainThread)   www_root               www/                           environment variable ASPEN_WWW_ROOT=www/
+pid-1261 thread-140735191843600 (MainThread) project_root is relative to CWD: '.'.
+pid-1261 thread-140735191843600 (MainThread) project_root set to /Users/whit537/personal/gratipay/gratipay.com.
+pid-1261 thread-140735191843600 (MainThread) Found plugin for renderer 'jinja2'
+pid-1261 thread-140735191843600 (MainThread) Won't log to Sentry (SENTRY_DSN is empty).
+pid-1261 thread-140735191843600 (MainThread) Renderers (*ed are unavailable, CAPS is default):
+pid-1261 thread-140735191843600 (MainThread)   stdlib_percent
+pid-1261 thread-140735191843600 (MainThread)   json_dump
+pid-1261 thread-140735191843600 (MainThread)   stdlib_format
+pid-1261 thread-140735191843600 (MainThread)   JINJA2
+pid-1261 thread-140735191843600 (MainThread)   stdlib_template
 ```
 
 You should then find this in your browser at
 [http://localhost:8537/](http://localhost:8537/):
 
-![Success](https://raw.github.com/gittip/www.gittip.com/master/img-src/success.png)
+![Success](https://raw.github.com/gratipay/gratipay.com/master/img-src/success.png)
 
 Congratulations! Sign in using Twitter or GitHub and you're off and
 running. At some point, try [running the test suite](#testing-).
 
+Configuring
+-----------
+
+Gratipay's default configuration lives in [`defaults.env`](https://github.com/gratipay/gratipay.com/blob/master/defaults.env).
+If you'd like to override some settings, create a file named `local.env` to store them.
+
+The following explains some of the content of that file:
+
+The `GITHUB_*` keys are for a gratipay-dev application in the Gratipay
+organization on Github. It points back to localhost:8537, which is where
+Gratipay will be running if you start it locally with `make run`. Similarly
+with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
+
+If you are running Gratipay somewhere other than `localhost:8537`, then you'll
+need to set `BASE_URL`, but your options are limited because we use proprietary
+fonts from [Typography.com](http://www.typography.com/), and they filter by
+`Referer`. You won't get the right fonts unless you use an approved domain.
+We've configured `gratipay.dev` as well as `localhost`, so if you don't want to
+run on `localhost` then configure `gratipay.dev` in your
+[`/etc/hosts`](https://en.wikipedia.org/wiki/Hosts_(file)) file and set this in
+`local.env`:
+
+    BASE_URL=http://gratipay.dev:8537
+    GITHUB_CLIENT_ID=ca4a9a35c161af1d024d
+    GITHUB_CLIENT_SECRET=8744f6333d51b5f4af38d46cf035ecfcf34c671e
+    GITHUB_CALLBACK=http://gratipay.dev:8537/on/github/associate
+
+If you wish to use a different username or database name for the database, you
+should override the `DATABASE_URL` in `local.env` using the following format:
+
+    DATABASE_URL=postgres://<username>@localhost/<database name>
+
+The `MANDRILL_KEY` value in `defaults.env` is for a test mail server, which
+won't actually send email to you. If you need to receive email during
+development then sign up for an account of your own at
+[Mandrill](http://mandrill.com/) and override `MANDRILL_KEY` in your
+`local.env`.
+
+
 Vagrant
 -------
-If you have vagrant installed, you can run gittip by running `vagrant up` from the project directory. Please note that if you ever switch between running gittip on your own machine to vagrant or vice versa, you will need to run `make clean`.
+Vagrant provides a convenient interface to VirtualBox to run and test
+Gratipay in virtual machine. This may be handy if you're on Windows.
 
-If you're using Vagrant for the first time you'll need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) installed. If you're on Linux you'll need to install `nfs-kernel-server`.
+You will need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
+installed. On Linux you may need to install `nfs-kernel-server` as well.
 
-The Vagrantfile will download a custom made image from the internet. If you have a slow internet connection, you can download a local copy of this file, by running:
+With Vagrant, you can run Gratipay by running `vagrant up` from the project
+directory. Please note that if you ever switch between running Gratipay on your
+own machine to Vagrant or vice versa, you will need to run `make clean`.
 
-`curl http://downloads.gittipllc.netdna-cdn.com/gittip.box`
+The `Vagrantfile` will download a pristine Ubuntu image (base box), save it,
+and create a virtual machine (VM) in VirtualBox. Then it will set up Gratipay
+prerequisites (the process is known as "provisioning") and show a welcome message.
 
-Once downloaded, vagrant will use this local file automatically when you run `vagrant up`. Vagrant is setup to use key based SSH authentication, if you're prompted for a password please use `vagrant`.
+The next time you run `vagrant up`, it will reuse the VM. Vagrant uses SSH
+based authentication. To login to VM, use the `vagrant ssh` command. If you're
+prompted for a password when logging in, please use `vagrant`.
+
+**Mac users:** If you're prompted for a password during initial installation,
+it's sudo and you should enter your Mac OS password.
 
 **Ubuntu users:** If you experience problems, please see [this
-issue](https://github.com/gittip/www.gittip.com/pull/2321#issuecomment-41455169).
-As mentioned, you will also need to be wary of projects that are nested
+issue](https://github.com/gratipay/gratipay.com/pull/2321#issuecomment-41455169).
+As mentioned there, you will also need to be wary of projects that are nested
 in encrypted directories.
 
 Docker
 ------------
 
-You can also install/run Gittip with Docker.
+You can also install/run Gratipay with Docker.
 
-Either pull the image from the Docker Index:
+Build it with the included Dockerfile:
 
-```
-$ docker pull citruspi/gittip
-```
-
-or build it with the included Dockerfile:
-
-```
-$ git clone git@github.com:gittip/www.gittip.com.git
-$ cd www.gittip.com
-$ docker build -t gittip .
+```shell
+$ git clone git@github.com:gratipay/gratipay.com.git
+$ cd gratipay.com
+$ docker build -t gratipay .
 ```
 
-Once you have the image, get the Image ID with
-
-```
-$ docker images
-```
+Once you've built the image, you can launch a container:
 
 
-You can then run it in the foreground:
-
-```
-$ docker run -p 8537:8537 [image_id]
+```shell
+$ docker run -d -p 8537:8537 gratipay
 ```
 
-or in the background:
+Check it out at [localhost:8537](http://localhost:8537/)!
 
-```
-$ docker run -d -p 8537:8537 [image_id]
-```
 
-Check it out at [localhost:8537](localhost:8537)!
+To edit files and have those changes reflect in the running container, mount your local folder when you execute the run command:
 
-If you run it in the background, you can get the Container ID with
-
-```
-$ docker ps
+```shell
+$ docker run -d -v $PWD:/srv/gratipay.com -p 8537:8537 gratipay
 ```
 
-With that, you can view the logs:
+You can get the running container's ID with `docker ps`. With that, you can
 
-```
+- view the logs:
+
+```shell
 $ docker logs [container_id]
 ```
 
-or kill the detached container with:
+- run commands within the project root:
 
+```shell
+$ docker exec [container_id] make schema
+$ docker exec [container_id] make fake
 ```
+
+Once you're done, kill the running container:
+
+```shell
 $ docker kill [container_id]
 ```
-
 
 Help!
 -----
 
-If you get stuck somewhere along the way, you can find help in the #gittip
-channel on [Freenode](http://webchat.freenode.net/) or in the [issue
-tracker](/gittip/www.gittip.com/issues/new) here on GitHub.
+If you get stuck somewhere along the way, [make an
+issue](https://github.com/gratipay/gratipay.com/issues/new) here on GitHub.
 
-Thanks for installing Gittip! :smiley:
+Thanks for installing Gratipay! :smiley:
 
 
-Modifying CSS
-=============
+Modifying CSS and JavaScript
+============================
 
 We use SCSS, with files stored in `scss/`. All of the individual files are
-combined in `scss/gittip.scss` which itself is compiled by `libsass` in
-`www/assets/%version/gittip.css.spt` on each request.
+combined in `scss/gratipay.scss` which itself is compiled by `libsass` in
+[`www/assets/gratipay.css.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.css.spt)
+on each request (it's behind a CDN in production).
 
-Testing [![Build Status](http://img.shields.io/travis/gittip/www.gittip.com/master.svg)](https://travis-ci.org/gittip/www.gittip.com)
+We use a similar pattern for JavaScript. Individual files are in `js/`, and
+they're concatenated on the fly (and put behind a CDN in production) in
+[`www/assets/gratipay.js.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.js.spt)
+
+
+Modifying the Database
+======================
+
+We write SQL, specifically the [PostgreSQL
+variant](http://www.postgresql.org/docs/9.3/static/). We keep our database
+schema in
+[`schema.sql`](https://github.com/gratipay/gratipay.com/blob/master/sql/schema.sql),
+and we write schema changes for each PR branch in a `sql/branch.sql` file, which
+then gets run against production and merged into `sql/schema.sql` during
+deployment.
+
+
+Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 =======
 
-Please write unit tests for all new code and all code you change. Gittip's
-test suite uses the py.test test runner, which will be installed into the
-virtualenv you get by running `make env`. As a rule of thumb, each test case
-should perform one assertion.
+Our test suite is divided into JavaScript tests and Python tests. The Python
+part of the test suite is much more extensive than the JavaScript part. You need
+to install [PhantomJS](http://phantomjs.org/) separately in order to run the
+JavaScript tests. For Python we use the [pytest](http://pytest.org/) test runner;
+it's installed automatically as part of `make env`.
 
-The easiest way to run the test suite is:
+The easiest way to run the whole test suite is:
 
-    $ make test
+```shell
+make test
+```
 
-However, the test suite deletes data in all tables in the public schema of the
+You can also do:
+
+```shell
+make jstest
+```
+
+and/or:
+
+```shell
+make pytest
+```
+
+To invoke `py.test` directly you should use the `honcho` utility that comes
+with the install. First `make tests/env`, the activate the virtualenv by running
+`source env/bin/activate`, and then:
+
+    [gratipay] $ cd tests/
+    [gratipay] $ honcho run -e defaults.env,local.env py.test
+
+Be careful! The test suite deletes data in all tables in the public schema of the
 database configured in your testing environment.
 
-To invoke py.test directly you should use the `honcho` utility that comes
-with the install. First `make tests/env`, activate the virtualenv and then:
-
-    [gittip] $ cd tests/
-    [gittip] $ honcho -e defaults.env,local.env run py.test
 
 Local Database Setup
 --------------------
 
 For the best development experience, you need a local
 installation of [Postgres](http://www.postgresql.org/download/). The best
-version of Postgres to use is 9.3.2, because that's what we're using in
+version of Postgres to use is 9.3.5, because that's what we're using in
 production at Heroku. You need at least 9.2, because we depend on being able to
 specify a URI to `psql`, and that was added in 9.2.
 
-+ Mac: use Homerew: `brew install postgres`
++ Mac: use Homebrew: `brew install postgres`
 + Ubuntu: use Apt: `apt-get install postgresql postgresql-contrib libpq-dev`
 
-To setup the instance for gittip's needs run:
+To setup the instance for gratipay's needs run:
 
-    $ sudo -u postgres createuser --superuser $USER
-    $ createdb gittip
-    $ createdb gittip-test
+```shell
+sudo -u postgres createuser --superuser $USER
+createdb gratipay
+createdb gratipay-test
+```
 
 You can speed up the test suite when using a regular HDD by running:
 
-    $ psql -q gittip-test -c 'alter database "gittip-test" set synchronous_commit to off'
+```shell
+psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit to off'
+```
 
 ### Schema
 
 Once Postgres is set up, run:
 
-    $ make schema
+```shell
+make schema
+```
 
-Which populates the database named by `DATABASE_URL` with the schema from `schema.sql`.
-
-The `schema.sql` file should be considered append-only. The idea is that it's the log
-of DDL that we've run against the production database. You should never change
-commands that have already been run. New DDL will be (manually) run against the
-production database as part of deployment.
-
+Which populates the database named by `DATABASE_URL` with the schema from `sql/schema.sql`.
 
 ### Example data
 
-The gittip database created in the last step is empty. To populate it with
+The gratipay database created in the last step is empty. To populate it with
 some fake data, so that more of the site is functional, run this command:
 
-    $ make data
+```shell
+make fake
+```
 
 
 API
 ===
 
-The Gittip API is comprised of these six endpoints:
+The Gratipay API is comprised of these four endpoints:
 
-**[/about/charts.json](https://www.gittip.com/about/charts.json)**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
+**[/about/charts.json](https://gratipay.com/about/charts.json)**
+([source](https://github.com/gratipay/gratipay.com/tree/master/www/about/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
 an array of objects, one per week, showing aggregate numbers over time. The
-[charts](https://www.gittip.com/about/charts.html) page uses this.
+[stats](https://gratipay.com/about/stats) page uses this.
 
-**[/about/paydays.json](https://www.gittip.com/about/paydays.json)**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/paydays.json.spt))&mdash;<i>public</i>&mdash;Returns
-an array of objects, one per week, showing aggregate numbers over time. The
-[charts](https://www.gittip.com/about/charts.html) page used to use this.
+**[/about/paydays.json](https://gratipay.com/about/paydays.json)**
+([source](https://github.com/gratipay/gratipay.com/tree/master/www/about/paydays.json.spt))&mdash;<i>public</i>&mdash;Returns
+an array of objects, one per week, showing aggregate numbers over time. The old
+charts page used to use this.
 
-**[/about/stats.json](https://www.gittip.com/about/stats.json)**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/stats.spt))&mdash;<i>public</i>&mdash;Returns
-an object giving a point-in-time snapshot of Gittip. The
-[stats](https://www.gittip.com/about/stats.html) page displays the same info.
+**[/about/stats.json](https://gratipay.com/about/stats.json)**
+([source](https://github.com/gratipay/gratipay.com/tree/master/www/about/stats.spt))&mdash;<i>public</i>&mdash;Returns
+an object giving a point-in-time snapshot of Gratipay. The
+[stats](https://gratipay.com/about/stats.html) page displays the same info.
 
-**/`%username`/charts.json**
-([example](https://www.gittip.com/Gittip/charts.json),
-[source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
-an array of objects, one per week, showing aggregate numbers over time for the
-given user.
+**/`~username`/public.json**
+([example](https://gratipay.com/Gratipay/public.json),
+[source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
 
-**/`%username`/public.json**
-([example](https://www.gittip.com/Gittip/public.json),
-[source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
-
-  - "receiving"&mdash;an estimate of the amount the given participant will
-    receive this week
-
-  - "my_tip"&mdash;logged-in user's tip to the Gittip participant in
-    question; possible values are:
-
-      - `undefined` (key not present)&mdash;there is no logged-in user
-      - "self"&mdash;logged-in user is the participant in question
-      - `null`&mdash;user has never tipped this participant
-      - "0.00"&mdash;user used to tip this participant
-      - "3.00"&mdash;user tips this participant the given amount
-      <br><br>
-
-  - "goal"&mdash;funding goal of the given participant; possible values are:
-
-      - `undefined` (key not present)&mdash;participant is a patron (or has 0 as the goal)
-      - `null`&mdash;participant is grateful for gifts, but doesn't have a specific funding goal
-      - "100.00"&mdash;participant's goal is to receive the given amount per week
-      <br><br>
+  - "taking"&mdash;an estimate of the amount the given participant will
+    take from Teams this week
 
   - "elsewhere"&mdash;participant's connected accounts elsewhere; returns an object with these keys:
 
@@ -422,78 +501,104 @@ given user.
           - `https://api.twitter.com/1.1/users/show.json?id=%twitter_immutable_id&include_entities=1`
       - "openstreetmap"&mdash;participant's OpenStreetMap account; possible values are:
           - `undefined` (key not present)&mdash;no OpenStreetMap account connected
-          - `%OPENSTREETMAP_API/user/%openstreetmap_username`
+          - `http://www.openstreetmap.org/user/%openstreetmap_username`
 
+**/`~username`/payment-instructions.json**
+([source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds
+to `GET` with an array of objects representing your current payment
+instructions. A payment instruction is created when a ~user instructs Gratipay
+to make voluntary payments to a Team. Pass a `team_slug` with `GET` to fetch
+payment instruction only for that particular team. `POST` an array of objects
+containing `team_slug` and `amount` to bulk upsert payment instructions (make
+sure to set `Content-Type` to `application/json`). The `amount` must be encoded
+as a string rather than a number. In case the upsert is not successful for any
+object, there will be an `error` attribute in the response explaining the error
+along with the `team_slug` to identify the object for which the error occurred.
 
-**/`%username`/tips.json**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/tips.json.spt))&mdash;<i>private</i>&mdash;Responds
-to `GET` with an array of objects representing your current tips. `POST` the
-same structure back in order to update tips in bulk (be sure to set
-`Content-Type` to `application/json` instead of
-`application/x-www-form-urlencoded`). You can `POST` a partial array to update
-a subset of your tips. The response to a `POST` will be only the subset you
-updated. If the `amount` is `"error"` then there will also be an `error`
-attribute with a one-word error code. If you include an `also_prune` key in the
-querystring (not the body!) with a value of `yes`, `true`, or `1`, then any
-tips not in the array you `POST` will be zeroed out.
+This endpoint requires authentication. Look up your user ID and API key on your
+[account page](https://gratipay.com/about/me/settings/) and pass them using
+basic auth.
 
-NOTE: The amounts must be encoded as a string (rather than a number).
-Additionally, currently, the only supported platform is 'gittip'.
-
-This endpoint requires authentication. Look for your API key on your [profile
-page](https://www.gittip.com/about/me/account), and pass it as the basic auth
-username. E.g.:
+E.g.:
+Request
 
 ```
-curl https://www.gittip.com/foobar/tips.json \
-    -u API_KEY: \
+curl https://gratipay.com/~username/payment-instructions.json \
+    -u $userid:$api_key \
     -X POST \
-    -d'[{"username":"bazbuz", "platform":"gittip", "amount": "1.00"}]' \
-    -H"Content-Type: application/json"
+    -d '[{"amount": "1.00", "team_slug": "foobar"}]' \
+    -H "Content-Type: application/json"
+```
+
+Response
+
+```
+[
+    {
+        "amount": "1.00",
+        "ctime": "2016-01-30T12:38:00.182230+00:00",
+        "due": "0.00",
+        "mtime": "2016-02-06T14:37:28.532508+00:00",
+        "team_name": "Foobar team",
+        "team_slug": "foobar"
+    }
+]
 ```
 
 API Implementations
 -------------------
 
-Below are some projects that use the Gittip APIs, that can serve as inspiration
+Below are some projects that use the Gratipay APIs, that can serve as inspiration
 for your project!
+
+### Renamed to Gratipay
+
+ - [Ruby: gratitude](https://github.com/JohnKellyFerguson/gratitude): a simple
+   ruby wrapper for the Gratipay API
+
+ - [php-curl-class](https://github.com/php-curl-class/php-curl-class/blob/master/examples/gratipay_send_tip.php): a php class to tip using the Gratipay API
+
+ - [gratipay-twisted](https://github.com/TigerND/gratipay-twisted): Gratipay client
+   for the Twisted framework
+
+ - [WordPress: WP-Gratipay](https://github.com/KakersUK/WP-Gratipay): a simple way to show a Gratipay widget on your WordPress site
+
+
+### Still Using Gittip
+
+These probably still work, but are using our [old name](https://medium.com/gratipay-blog/gratitude-gratipay-ef24ad5e41f9):
 
  - [Drupal: Gittip](https://drupal.org/project/gittip): Includes a Gittip
    giving field type to let you implement the Khan academy model for users on
-   your Drupal site.
+   your Drupal site. ([ticket](https://www.drupal.org/node/2332131))
 
  - [Node.js: Node-Gittip](https://npmjs.org/package/gittip) (also see [Khan
-   Academy's setup](http://ejohn.org/blog/gittip-at-khan-academy/))
-
- - [Ruby: gratitude](https://github.com/JohnKellyFerguson/gratitude): A ruby
-   gem that wraps the Gittip API.
-
- - [WordPress: WP-Gittip](https://github.com/daankortenbach/WP-Gittip)
+   Academy's setup](http://ejohn.org/blog/gittip-at-khan-academy/)) ([ticket](https://github.com/KevinTCoughlin/node-gittip/issues/1))
 
  - [hubot-gittip](https://github.com/myplanetdigital/hubot-gittip): A Hubot
-   script for interacting with a shared Gittip account.
+   script for interacting with a shared Gratipay account. ([ticket](https://github.com/myplanetdigital/hubot-gittip/issues/6))
 
  - [gittip-collab](https://github.com/engineyard/gittip-collab): A Khan-style
-   tool for managing a Gittip account as a team.
+   tool for managing a Gittip account as a team. ([ticket](https://github.com/engineyard/gittip-collab/issues/1))
 
  - [WWW::Gittip](https://metacpan.org/pod/WWW::Gittip): A Perl module
-   implementing the Gittip API more or less
-
- - [php-curl-class](https://github.com/php-curl-class/php-curl-class/blob/master/examples/gittip_send_tip.php): A php class to tip using the Gittip API.
-
- - [gittip-twisted](https://github.com/TigerND/gittip-twisted): Gittip client
-   for the Twisted framework
+   implementing the Gittip API more or less ([ticket](https://rt.cpan.org/Public/Bug/Display.html?id=101103))
 
 
 Glossary
 ========
 
 **Account Elsewhere** - An entity's registration on a platform other than
-Gittip (e.g., Twitter).
+Gratipay (e.g., Twitter).
 
 **Entity** - An entity.
 
-**Participant** - An entity registered with Gittip.
+**Participant** - An entity registered with Gratipay.
 
-**User** - A person using the Gittip website. Can be authenticated or
+**User** - A person using the Gratipay website. Can be authenticated or
 anonymous. If authenticated, the user is guaranteed to also be a participant.
+
+License
+========
+
+Gratipay is dedicated to public domain. See the text of [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/) dedication in [COPYING](COPYING) here.

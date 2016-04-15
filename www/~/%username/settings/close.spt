@@ -1,0 +1,130 @@
+from gratipay.utils import get_participant, to_javascript
+[---]
+participant = get_participant(state, restrict=True)
+banner = '~' + participant.username
+title = _("Close Account")
+
+payday_is_running = website.db.one("""
+
+    SELECT ts_start FROM paydays WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
+
+""") is not None
+
+if request.method == 'POST':
+    if payday_is_running:
+        pass    # User will get the "Try Again Later" message.
+    else:
+        participant.close()
+        website.redirect('/~%s/' % participant.username)
+teams = participant.get_teams()
+nteams = len(teams)
+if nteams > 1:
+    teams = ', '.join([t.name for t in teams[:-1]]) + ' and ' + teams[-1].name + ' teams'
+elif nteams == 1:
+    teams = teams[0].name + ' team'
+
+[---] text/html
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+  {% if teams or participant.balance > 0 %}
+
+    {% if teams %}
+
+      <p>You are the owner of the {{ teams }}. We don't yet <a
+      href="https://github.com/gratipay/gratipay.com/issues/3602">support
+      team owners closing their accounts</a>.</p>
+
+    {% endif %}
+
+    {% if participant.balance > 0 %}
+      {% if participant.has_payout_route %}
+
+        <p>You have a balance of <b>${{ participant.balance }}</b>, and you've
+        <a href="../routes/paypal">linked a PayPal account</a>. If you
+        haven't received a payout from us before, please <a
+        href="mailto:support@gratipay.com?subject=close%20account">notify
+        support</a> to make sure your payout goes through.
+
+      {% else %}
+
+        Please <a href="../routes/paypal">link a PayPal account</a> and
+        then <a
+        href="mailto:support@gratipay.com?subject=close%20account">notify
+        support</a> to make sure your payout goes through.
+
+      {% endif %}
+
+      You will be able to close your account once your balance is zero.</p>
+
+    {% endif %}
+
+  {% elif payday_is_running %}
+
+    <h2>Try Again Later</h2>
+
+    <p>Sorry, we're running payday right now, and we're not set up
+    to close accounts while payday is running. Please check back in
+    an hour.</p>
+
+  {% else %}
+    <form method="POST">
+
+        <h2>Personal Information</h2>
+
+        <p>We immediately clear out most of the information in your
+        profile (though it may still exist in our database in event
+                logs, to be fully deleted once we sort out our <a
+                href="https://github.com/gratipay/gratipay.com/issues/397">data
+                retention policy</a>).</p>
+
+        <p>Things we clear immediately include your profile statement, 
+        the payroll you're taking, and the payments you're giving.</p>
+
+        <p>We specifically <i>don't</i> delete your past giving and 
+        taking history on the site, because that information also belongs 
+        equally to other users (the owners of the Teams you gave to and 
+        took from).</p>
+
+        <p>After you close your account, your profile page will say,
+        &ldquo;The account owner has closed this account.&rdquo;</p>
+
+
+        <h2>Username</h2>
+
+        <p>We may give your username to someone else if they ask for
+        it, but not for at least a year after you close your account
+        (unless we determine that you've been infringing a
+                trademark).</p>
+
+        <p>Until we give your username to someone else, you can use it
+        again if you ever decide to rejoin Gratipay. Simply sign in.</p>
+
+
+        <h2>Remember</h2>
+
+        <p>We have no control over links to your profile from other
+        places on the Internet.</p>
+
+        <p>We have no control over content indexed by search engines
+        like Google.</p>
+
+        <h2>Ready?</h2>
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="selected larger close-account" id="save"
+            type="submit">Yes, Close My Gratipay Account</button>
+    </form>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if error %}
+    <script>
+        $(function () {
+            Gratipay.notification({{ to_javascript(error)|safe }}, 'error', -1)
+        });
+    </script>
+{% endif %}
+{% endblock %}

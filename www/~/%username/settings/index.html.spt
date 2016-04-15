@@ -1,0 +1,93 @@
+from gratipay.utils import get_participant
+
+[-----------------------------------------------------------------------------]
+
+participant = get_participant(state, restrict=True)
+banner = '~' + participant.username
+title = _("Settings")
+
+emails = participant.get_emails()
+
+[-----------------------------------------------------------------------------]
+{% extends "templates/profile.html" %}
+
+{% block scripts %}
+<script>$(document).ready(Gratipay.settings.init);</script>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div id="settings">
+    <div class="username js-edit">
+        <h2>{{ _("You are {0}",
+                 ("<span class='view'>~%s</span>"|safe) % participant.username) }}
+            <button class="edit">{{ _("Edit") }}</button>
+            <form class="edit" action="../username.json" data-display="inline">
+                ~<input name="username" value="{{ participant.username }}"/>
+                <button class="save">{{ _("Save") }}</button>
+                <button class="cancel">{{ _("Cancel") }}</button>
+                <span class="warning">
+                    {{ _("Have you linked to your Gratipay profile from other websites? Be sure to update those links!") }}
+                </span>
+            </form>
+        </h2>
+    </div>
+
+    <h2>{{ _("Available Money") }}</h2>
+    <table class="accounts" id="account-balance">
+        <tr>
+            <td class="account-type">
+                <img src="{{ website.asset('bank_account_icon.jpg') }}" />
+            </td>
+            <td class="account-details">
+                <div class="account-type">{{ _("Available Balance") }}</div>
+                <span>
+                    <a class="account-username" href="/~{{ participant.username }}/history/">{{ format_currency(participant.balance, "USD") }}</a>
+                </span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="api-credentials">
+      <h2>{{ _("API Credentials") }}</h2>
+      <div>{{ _("User ID:") }} <span>{{ participant.id }}</span></div>
+      <div class="key">
+        {{ _("API Key:") }} <span>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</span><br>
+        <button class="show">{{ _("Show Key") }}</button>
+        <button class="hide" style="display: none">{{ _("Hide Key") }}</button>
+        <button class="recreate">{{ _("Recreate") }}</button>
+      </div>
+      <a href="https://github.com/gratipay/gratipay.com#api">{{ _("API docs") }}</a>
+    </div>
+
+    <h2>{{ _("Privacy") }}</h2>
+    <p class="privacy-settings">
+        <label>
+            <input type="checkbox" data-field="anonymous_giving"
+                {% if participant.anonymous_giving %}checked="true"{% endif %} />
+                {{ _("Hide total giving to others.") }}
+        </label>
+        <br />
+        <label class="is-searchable">
+            <input type="checkbox" data-field="!is_searchable"
+                {% if not participant.is_searchable %}checked="true"{% endif %} />
+                {{ _("Hide myself from search results.") }}
+        </label>
+    </p>
+    <p id="dnt">
+        <a href="/about/privacy/#dnt">{{ _("Do Not Track") }}</a>:
+        {% if request.headers.get('DNT') == '1' %}
+            {{ _("On").upper() }}
+        {% else %}
+            {{ _("Off").upper() }}
+        {% endif %}
+    </p>
+
+    <div class="close">
+      <h2>{{ _("Close") }}</h2>
+      <div class="buttons">
+        <button class="close-account">{{ _("Close Account") }}</button>
+      </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-"""JSON endpoint for a Gittip widget.
+"""JSON endpoint for a Gratipay widget.
 """
 import re
 
@@ -7,7 +7,7 @@ from aspen import Response
 from urllib import urlencode
 from base64 import b64decode, b64encode
 
-from gittip.models.account_elsewhere import get_account_elsewhere
+from gratipay.models.account_elsewhere import get_account_elsewhere
 
 whitelisted_endpoints = ['public', 'charts']
 
@@ -25,59 +25,37 @@ def stringify_qs(qs, prefix='?'):
 
 [-----------------------------------------------------------------------------]
 
-endpoint = path['endpoint']
+endpoint = request.path['endpoint']
 if not endpoint in whitelisted_endpoints:
     raise Response(404)
 
-platform, account = get_account_elsewhere(request)
+platform, account = get_account_elsewhere(website, state)
 
 if account.participant.is_claimed:
     next_url = '/%s/%s.json' % (account.participant.username, endpoint)
-    next_url += stringify_qs(qs)
-    headers = {}
-    headers["Access-Control-Allow-Origin"] = "*"
-    headers["Location"] = next_url
-    raise Response(302, body='*barrel roll*', headers=headers)
+    next_url += stringify_qs(request.qs)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    website.redirect(next_url, response=response)
 
 
 participant = account.participant
 
-output = { "on": path['platform']
-         , "avatar": participant.avatar_url
-         , "npatrons": participant.get_number_of_backers()
-          }
+out = { "on": request.path['platform']
+      , "avatar": participant.avatar_url
+       }
 
-
-
-# Generate my_tip key
-# ===================
-# Display values:
-#
-#   undefined - user is not authenticated
-#   "self" - user == participant
-#   null - user has never tipped this person
-#   0.00 - user used to tip this person but now doesn't
-#   3.00 - user tips this person this amount
-
-if not user.ANON:
-    if user.participant.username == participant.username:
-        my_tip = "self"
-    else:
-        my_tip = user.participant.get_tip_to(participant.username)
-    output["my_tip"] = str(my_tip)
-
-
-response.body = output
-
-# CORS - see https://github.com/gittip/aspen-python/issues/138
+# CORS - see https://github.com/gratipay/aspen-python/issues/138
 response.headers["Access-Control-Allow-Origin"] = "*"
 
-# JSONP - see https://github.com/gittip/aspen-python/issues/138
-callback = qs.get('callback')
+# JSONP - see https://github.com/gratipay/aspen-python/issues/138
+callback = request.qs.get('callback')
 if callback is not None:
     if callback_pattern.match(callback) is None:
-        response.code = 400
-        response.body = {"error": "bad callback"}
+        raise Response(400, "bad callback")
     else:
-        response.body = "%s(%s)" % (callback, json.dumps(response.body))
+        response.body = "%s(%s)" % (callback, json.dumps(out))
         response.headers['Content-Type'] = 'application/javascript'
+        raise response
+
+[---] application/json via json_dump
+out

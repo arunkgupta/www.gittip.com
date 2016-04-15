@@ -1,0 +1,1073 @@
+# Translations template for PROJECT.
+# Copyright (C) 2015 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# 
+# Translators:
+# Caner Başaran <basaran.caner@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Gratipay\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/gratipay/language/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Something not right? Reply to this email for help."
+msgstr ""
+
+msgid "Greetings, program!"
+msgstr ""
+
+msgid "Connect to {0} on Gratipay?"
+msgstr ""
+
+msgid ""
+"We've received a request to connect {0} to the {1} account on Gratipay. "
+"Sound familiar?"
+msgstr ""
+
+msgid "Yes, proceed!"
+msgstr ""
+
+msgid "Follow this link to finish connecting your email:"
+msgstr ""
+
+msgid "Connecting {0} to {1} on Gratipay."
+msgstr ""
+
+msgid ""
+"We are connecting {0} to the {1} account on Gratipay. This is a notification"
+" sent to {2} because that is the primary email address we have on file."
+msgstr ""
+
+msgid "There doesn't seem to be a user named {0} on {1}."
+msgstr ""
+
+msgid "You need to log in to access this page."
+msgstr "Bu sayfaya erişmek için oturum açmanız gerekir."
+
+msgid "You are not authorized to access this page."
+msgstr ""
+
+msgid "Basic Info"
+msgstr "Temel Bilgi"
+
+msgid "Features"
+msgstr "Özellikler"
+
+msgid "Policies"
+msgstr "Politikalar"
+
+msgid "Security"
+msgstr "Güvenlik"
+
+msgid "+ Add"
+msgstr "+ Ekle"
+
+msgid "Disconnect"
+msgstr ""
+
+msgid "About"
+msgstr "Hakkında"
+
+msgid "Explore"
+msgstr "Keşfet"
+
+msgid "Search"
+msgstr "Ara"
+
+msgid "wk"
+msgstr "hf"
+
+msgid "Contact Us"
+msgstr "İletişim"
+
+msgid "FAQ"
+msgstr "SSS"
+
+msgid "Terms"
+msgstr "Şartlar"
+
+msgid "Colophon"
+msgstr ""
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Your credit card has failed!"
+msgstr ""
+
+msgid "Fix your card"
+msgstr "Kartını düzelt"
+
+msgid "Your credit card is about to expire!"
+msgstr ""
+
+msgid "Update card"
+msgstr "Kartı Güncelle"
+
+msgid "Your account does not have an associated email address."
+msgstr "Hesabınızla ilişkili bir e-posta adresiniz yok."
+
+msgid "Add an email address"
+msgstr "E-posta adresi ekle"
+
+msgid "Overview"
+msgstr ""
+
+msgid "Stats"
+msgstr "İstatistikler"
+
+msgid "Pricing"
+msgstr "Fiyatlandırma"
+
+msgid "Communities"
+msgstr "Topluluklar"
+
+msgid "Join Communities"
+msgstr "Topluluklara Katıl"
+
+msgid "Social Profiles"
+msgstr "Sosyal Hesaplar"
+
+msgid "Other Receiving Options"
+msgstr "Diğer Bahşiş Alma Seçenekleri"
+
+msgid "Other Giving Options"
+msgstr ""
+
+msgid "Save"
+msgstr "Kaydet"
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Edit"
+msgstr "Düzenle"
+
+msgid "Teams"
+msgstr "Takımlar"
+
+msgid "Do Not Track"
+msgstr "Beni Takip Etme"
+
+msgid "Jump to {0} from {1}"
+msgstr "{1} ağından şu {0} hesaba bak"
+
+msgid "Go"
+msgstr "Git"
+
+msgid "hidden"
+msgstr ""
+
+msgid "Gives"
+msgstr ""
+
+msgid "Receives"
+msgstr ""
+
+msgid "Goal"
+msgstr ""
+
+msgid "Joined"
+msgstr ""
+
+msgid "Terms and Conditions"
+msgstr "Şartlar ve Koşullar"
+
+msgid "Terms of Service"
+msgstr "Hizmet Şartları"
+
+msgid "Privacy Policy"
+msgstr "Gizlilik Politikası"
+
+msgid "Statement"
+msgstr "Sözce"
+
+msgid "Tell us how you're making the world better."
+msgstr "Dünyayı nasıl daha iyi bir yer yaptınızı anlatın."
+
+msgid ""
+"Gratipay allows you to have profile statements in multiple languages. Use "
+"the selector below to switch between them."
+msgstr "Gratipay, çok dilli profil sözcesine sahip olmanızı sağlar. Aralarında geçiş için aşağıdaki seçiciyi kullanın."
+
+msgid "Markdown supported."
+msgstr "Markdown desteklenir."
+
+msgid "What is markdown?"
+msgstr "Nedir bu Markdown?"
+
+msgid "View source."
+msgstr "Kaynak kodu göster"
+
+msgid "Funding Goal"
+msgstr "Fonlama Hedefi"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Members"
+msgstr "Üyeler"
+
+msgid "Receiving"
+msgstr ""
+
+msgid "Giving"
+msgstr ""
+
+msgid "History"
+msgstr "Geçmiş"
+
+msgid "Widgets"
+msgstr ""
+
+msgid "Account"
+msgstr "Hesap"
+
+msgid "Events"
+msgstr ""
+
+msgid "Search Gratipay"
+msgstr "Gratipay Ara"
+
+msgid "Disclosure"
+msgstr ""
+
+msgid "Hall of Fame"
+msgstr ""
+
+msgid "{0} to pledge to {1}"
+msgstr ""
+
+msgid "{0} to give to {1}"
+msgstr ""
+
+msgid "Sign in"
+msgstr "Oturum aç"
+
+#, python-format
+msgid "Only {0}% of active users also {1}support Gratipay{2}."
+msgstr ""
+
+#, python-format
+msgid "{0}% of active users also {1}support Gratipay{2}."
+msgstr ""
+
+msgid "Will you help us reach {0}%?"
+msgstr ""
+
+msgid "Will you join them?"
+msgstr "Onlara katılacak mısınız?"
+
+msgid "Other"
+msgstr ""
+
+msgid "No thanks"
+msgstr "Hayır, teşekkürler"
+
+msgid "We fund Gratipay solely through your voluntary payments!"
+msgstr ""
+
+msgid "Learn more"
+msgstr "Daha fazla bilgi için"
+
+msgid "Learn more about how teams work"
+msgstr ""
+
+msgid "Your Tip"
+msgstr "Bahşişin"
+
+msgid "per week"
+msgstr ""
+
+msgid "Pledge to {0}"
+msgstr ""
+
+msgid "Give to {0}"
+msgstr ""
+
+msgid "Stop Giving"
+msgstr ""
+
+msgid ""
+"Back your payment with a {0}credit card{1} to make sure it goes through!"
+msgstr ""
+
+msgid "Fix your {0}credit card{1} to make sure your payment goes through!"
+msgstr ""
+
+msgid "Your bank account is {0}not connected{1}"
+msgstr "Banka hesabınız {0}bağlı değil{1}"
+
+msgid "Your bank account is {0}connected{1}"
+msgstr "Banka hesabınız {0}bağlı{1}"
+
+msgid "Bank Account"
+msgstr "Banka Hesabı"
+
+msgid ""
+"When you receive money on Gratipay we'll automatically deposit it into your "
+"bank account."
+msgstr "Gratipay üzerinden para aldığınızda otomatik olarak banka hesabınıza yatırılacaktır."
+
+msgid ""
+"If you don't connect a bank account then your money will accumulate within "
+"Gratipay unless you regift it to others."
+msgstr ""
+
+msgid ""
+"Deposits are initiated every Thursday, but only if you have more than {0} in"
+" your balance."
+msgstr ""
+
+msgid "and then you'll be able to add or change your bank account."
+msgstr ""
+
+msgid "Failure"
+msgstr ""
+
+msgid "Identity Verification"
+msgstr "Kimlik Doğrulama"
+
+msgid "Routing Information"
+msgstr ""
+
+msgid "Your Legal Name"
+msgstr "Yasal Adınız"
+
+msgid "Street Address"
+msgstr "Açık Adres"
+
+msgid "City"
+msgstr "Şehir"
+
+msgid "State or Province"
+msgstr "Eyalet veya İl"
+
+msgid "ZIP or Postal Code"
+msgstr "Posta Kodu"
+
+msgid "Country"
+msgstr "Ülke"
+
+msgid "non-US?"
+msgstr "ABD'li olmayan?"
+
+msgid "Contact Phone Number"
+msgstr "Telefon Numarası"
+
+msgid "Date of Birth"
+msgstr "Doğum Tarihi"
+
+msgid "Last four SSN digits"
+msgstr "Son dört SSN rakamı"
+
+msgid "(Not required)"
+msgstr "(gerekli değil)"
+
+msgid "Name on Bank Account"
+msgstr "Bank Hesap Cüzdanınızdaki Adınız"
+
+msgid "Routing Number"
+msgstr "Yönlendirme Numarası"
+
+msgid "Bank Account Number"
+msgstr "Banka Hesap Numarası"
+
+msgid "Disconnect My Bank Account"
+msgstr "Banka Hesabımın Bağlantısını Kes"
+
+msgid "Your credit card is {0}missing{1}"
+msgstr "Kredi kartınız {0}yok{1}"
+
+msgid "Your credit card is {0}working{1}"
+msgstr "Kredi kartınız {0}çalışıyor{1}"
+
+msgid "Your credit card is {0}failing{1}"
+msgstr "Kredi kartınız {0}hatalı{1}"
+
+msgid "Credit Card"
+msgstr "Kredi Kartı"
+
+msgid ""
+"When you don't have enough money in your Gratipay account to cover your "
+"gifts, we'll attempt to pull money in using your credit card."
+msgstr "Hediyeleri kapsayacak şekilde Gratipay hesabınızda yeterli para yoksa, kredi kartınızı kullanarak para çekmeyi deneyeceğiz."
+
+msgid ""
+"If your credit card is missing or fails then your gifts won't go through for"
+" that week."
+msgstr ""
+
+msgid "and then you'll be able to add or change your credit card."
+msgstr ""
+
+msgid "Current:"
+msgstr ""
+
+msgid "Required"
+msgstr "Gerekli"
+
+msgid "Credit Card Number"
+msgstr "Kredi Kartı Numarası"
+
+msgid "Expiration"
+msgstr "Son Kullanma Tarihi"
+
+msgid "CVV"
+msgstr "CVV"
+
+msgid ""
+"To minimize processing fees, we charge your credit card at least $10 at a "
+"time                         (anything extra stays in Gratipay to use in "
+"future weeks). {0}Read More{1}"
+msgstr ""
+
+msgid "Full Name on Card"
+msgstr "Kartın üzerinde yazan Tam Adınız"
+
+msgid "Address 1"
+msgstr "Adres 1"
+
+msgid "Address 2"
+msgstr "Adres 2"
+
+msgid "City or Town"
+msgstr "İl veya İlçe"
+
+msgid "Choose a country..."
+msgstr "Bir ülke seçin..."
+
+msgid "Disconnect My Credit Card"
+msgstr "Kredi Kartımın Bağlantısını Kes"
+
+msgid "Weekly Payments"
+msgstr "Haftalık Ödemeler"
+
+msgid "Motivated by Gratitude"
+msgstr "ile Minnettarlığınızı Gösterin"
+
+msgid ""
+"Sustainably crowdfund your business, personal projects, or charity, with "
+"{0}no extra fees{1}."
+msgstr "Sürdürülebilir olarak {0}ilave ücretsiz{1} işletmeni, kişisel projeni veya hayır işlerini kitlesel fonla."
+
+msgid "{0}Sign In{1} {2}to Accept Weekly Payments{3}"
+msgstr "{0}Oturum Aç{1} {2}Haftalık Ödemeler Almak için{3}"
+
+msgid "Sign in with {0}"
+msgstr "{0} ile Oturum aç"
+
+msgid "Or sign in with:"
+msgstr "Veya diğerleri ile oturum aç:"
+
+msgid ""
+"By signing in, you indicate that you have read and agree to our {0}Terms and"
+" Conditions{1}."
+msgstr "Oturum açarak,  {0}Şart ve Koşullarımızı {1} okuduğunuzu ve kabul ettiğinizi belirtmiş olursunuz."
+
+msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
+msgstr "{2}Geçen hafta{3} {1} değiş tokuş yapan {0} etkin kullanıcılara katılacaksınız."
+
+msgid "Want to see who they are? Browse {0}our communities{1}."
+msgstr "Kim olduklarını görmek ister misin? {0}Topluğumuza{1} gözat."
+
+msgid "Want to work for Gratipay? We are an {0}open company{1}."
+msgstr "Gratipay için çalışmak ister misin? Biz {0}açık bir şirketiz{1}."
+
+msgid "Sign out"
+msgstr "Oturumu kapat"
+
+msgid "Welcome, {0}!"
+msgstr "Hoşgeldin, {0}!"
+
+msgid "Thanks for joining Gratipay!"
+msgstr "Gratipay katıldığınız için teşekkür ederiz!"
+
+msgid "Welcome back, {0}!"
+msgstr ""
+
+msgid "Your balance is {0}."
+msgstr "Bakiyeniz {0}."
+
+msgid "Next steps:"
+msgstr "Sonraki adımlar:"
+
+msgid ""
+"Start tipping people; you can find great people to tip by browsing {0}our "
+"communities{1}."
+msgstr "Bahşiş bırakmaya başla; {0}topluluğumuza{1} bakarak bahşiş bırakabileceğin müthiş insanları bulabilirsin."
+
+msgid ""
+"{0}Add a credit card{1} to make sure your weekly tips go through this "
+"Thursday."
+msgstr "Bu Salı itibari ile haftalık bahşişlerinizin gönderilmesinden eminseniz, {0}kredi kartınızı ekleyin{1}."
+
+msgid "{0}Fill out your profile{1} to let others know about you."
+msgstr "Diğerler kullanıcıların hakkınızda bilgi alabilmesi için {0}profilinizi doldurun{1}."
+
+msgid ""
+"Reach a wider audience by {0}embedding our widgets{1} on your blog/website."
+msgstr "Blog ve websitenize {0}widget'ımızı gömerek{1} daha geniş kitlelere ulaşabilirsiniz."
+
+msgid "Go to {0}your profile{1}."
+msgstr ""
+
+msgid "Found a matching username"
+msgid_plural "Found matching usernames"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Found a matching community name"
+msgid_plural "Found matching community names"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{0}{n}{1} Member"
+msgid_plural "{0}{n}{1} Members"
+msgstr[0] "{0}{n}{1} Üye"
+msgstr[1] "{0}{n}{1} Üye"
+
+msgid "Found a matching user statement"
+msgid_plural "Found matching user statements"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Sorry, we didn't find anything matching your query."
+msgstr ""
+
+msgid "Looking for a specific user of a social network?"
+msgstr "Sosyal ağlardan birisine mi bakıyorsun?"
+
+msgid "Sign Out"
+msgstr "Oturumu Kapat"
+
+msgid "Are you sure you wish to sign out?"
+msgstr "Oturumun kapatılmasını istediğinizden emin misiniz?"
+
+msgid "Yes!"
+msgstr "Evet!"
+
+msgid "This is not a valid Bitcoin address."
+msgstr "Geçerli bir Bitcoin adresi değil."
+
+msgid ""
+"Warning: Doing this will remove all the tips you are currently receiving.\n"
+"\n"
+"That cannot be undone!"
+msgstr ""
+
+msgid "You don't have a profile statement in this language yet."
+msgstr "Henüz bu dilde bir profil sözceniz yok."
+
+msgid "You haven't saved your changes, are you sure you want to discard them?"
+msgstr ""
+
+msgid "I'm grateful for gifts, but don't have a specific funding goal."
+msgstr "Hediyeler için minnettarım, ama özel bir fonlama hedefi yok."
+
+msgid "I'm here as a patron."
+msgstr ""
+
+msgid "I'm here as a patron, and politely decline to receive gifts."
+msgstr ""
+
+msgid "My goal is to receive {0} per week on Gratipay."
+msgstr ""
+
+msgid "We're grateful for gifts, but don't have a specific funding goal."
+msgstr ""
+
+msgid "We're here as a patron."
+msgstr ""
+
+msgid "We're here as a patron, and politely decline to receive gifts."
+msgstr ""
+
+msgid "Our goal is to receive {0} per week on Gratipay."
+msgstr ""
+
+msgid "with {n} other"
+msgid_plural "with {n} others"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"Warning: Doing this will remove all the members from your team.\n"
+"\n"
+"You'll have to add them back manually to undo this!"
+msgstr ""
+
+msgid "Your account type has been changed."
+msgstr ""
+
+msgid "Please sign in first"
+msgstr ""
+
+msgid "Tip changed to {0} per week!"
+msgstr ""
+
+msgid "Close Account"
+msgstr "Hesabı Kapat"
+
+msgid ""
+"You still have money in this Gratipay account, please choose a disbursement "
+"method below or contact support."
+msgstr ""
+
+msgid "The bank withdrawal failed. Error message: {0}"
+msgstr ""
+
+msgid "You are {0}"
+msgstr "Hesap adım {0}"
+
+msgid ""
+"Have you linked to your Gratipay profile from other websites? Be sure to "
+"update those links!"
+msgstr "Başka sitelerde Gratipay profiliniz bağlantıl mı? Bu bağlantıları güncellediğinizden emin olun!"
+
+msgid "Account type"
+msgstr "Hesap türü"
+
+msgid "Individual"
+msgstr "Bireysel"
+
+msgid "Team"
+msgstr "Takım"
+
+msgid "Available Money"
+msgstr "Mevcut Para"
+
+msgid "Available Balance"
+msgstr "Mevcut Bakiye"
+
+msgid "Adding Money"
+msgstr "Para Yatırma"
+
+msgid "Withdrawing Money"
+msgstr "Para Çekme"
+
+msgid "Your bank account is {0}working{1}"
+msgstr "Banka hesabınız {0}çalışıyor{1}"
+
+msgid "Your bank account is {0}failing{1}"
+msgstr "Banka hesabınız {0}hatalı{1}"
+
+msgid "Email Addresses (Private)"
+msgstr "E-posta Adresi (Gizli)"
+
+msgid "Primary"
+msgstr ""
+
+msgid "Unverified"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Resend email"
+msgstr ""
+
+msgid "Set as primary"
+msgstr ""
+
+msgid "Add email address"
+msgstr "E-posta adresini ekle"
+
+msgid "API Credentials"
+msgstr ""
+
+msgid "User ID:"
+msgstr ""
+
+msgid "API Key:"
+msgstr ""
+
+msgid "Show Key"
+msgstr "Anahtarı Göster"
+
+msgid "Hide Key"
+msgstr "Anahtarı Gizle"
+
+msgid "Recreate"
+msgstr "Yeniden oluştur"
+
+msgid "API docs"
+msgstr "API belgeleri"
+
+msgid "Privacy"
+msgstr "Gizlilik"
+
+msgid "Hide total giving from others."
+msgstr ""
+
+msgid "Hide total receiving from others."
+msgstr ""
+
+msgid "Hide myself from search results."
+msgstr ""
+
+msgid "On"
+msgstr "Açık"
+
+msgid "Off"
+msgstr "Kapalı"
+
+msgid "Close"
+msgstr "Kapatma"
+
+msgid "Invalid email address."
+msgstr "Geçersiz e-posta adresi."
+
+msgid "A verification email has been sent to {0}."
+msgstr "Doğrulama e-postası {0} gönderildi."
+
+msgid "You have already added and verified this address."
+msgstr ""
+
+msgid "Please Sign In"
+msgstr "Lütfen Oturum Açın"
+
+msgid "Sign in to finish connecting your email."
+msgstr ""
+
+msgid "Wrong Account"
+msgstr "Yanlış Hesap"
+
+msgid ""
+"You're signed into the wrong Gratipay account to complete this email "
+"verification. If you accidentally created two Gratipay accounts, you can "
+"merge them by logging into the main one and adding the social accounts from "
+"the other. Email {0} if you'd like help."
+msgstr ""
+
+msgid "Success!"
+msgstr ""
+
+msgid "Your email address {0} is now connected to your Gratipay account."
+msgstr ""
+
+msgid "Address Taken"
+msgstr ""
+
+msgid ""
+"The email address {0} is already connected to a different Gratipay account."
+msgstr ""
+
+msgid "Already Verified"
+msgstr ""
+
+msgid "Your email address {0} is already connected to your Gratipay account."
+msgstr ""
+
+msgid "Missing Info"
+msgstr ""
+
+msgid ""
+"Sorry, that's a bad link. You'll need to view your email addresses and start"
+" over."
+msgstr ""
+
+msgid "Expired"
+msgstr ""
+
+msgid "The verification code for {0} has expired."
+msgstr ""
+
+msgid "The verification code for {0} is bad."
+msgstr ""
+
+msgid "Resend verification email"
+msgstr ""
+
+msgid "View your email addresses"
+msgstr ""
+
+msgid "You cancelled {n} tip in the past 30 days"
+msgid_plural "You cancelled {n} tips in the past 30 days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Tips"
+msgstr ""
+
+msgid "Recipient"
+msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Last Set"
+msgstr ""
+
+msgid "First Set"
+msgstr ""
+
+msgid "Recently Cancelled"
+msgstr ""
+
+msgid "within the last 30 days"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Unclaimed"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid "pre"
+msgstr ""
+
+msgid "pending"
+msgstr ""
+
+msgid "failed"
+msgstr ""
+
+msgid "succeeded"
+msgstr ""
+
+msgid "You joined {0} ago."
+msgstr "{0} önce katıldın."
+
+msgid "{0} joined {1} ago."
+msgstr ""
+
+msgid "Their balance is {0}."
+msgstr ""
+
+msgid "Total given: {0}"
+msgstr ""
+
+msgid "Total received: {0}"
+msgstr ""
+
+msgid "Outside"
+msgstr ""
+
+msgid "Inside Gratipay"
+msgstr ""
+
+msgid "Bank"
+msgstr "Banka"
+
+msgid "Card"
+msgstr "Kart"
+
+msgid "Fees"
+msgstr ""
+
+msgid "Credits"
+msgstr ""
+
+msgid "Debits"
+msgstr ""
+
+msgid "Balance"
+msgstr ""
+
+msgid "Status"
+msgstr "Durum"
+
+msgid "Notes"
+msgstr ""
+
+msgid "Automatic Withdrawal"
+msgstr ""
+
+msgid "Automatic Charge"
+msgstr ""
+
+msgid "Receipt"
+msgstr ""
+
+msgid "Team Members"
+msgstr "Takım Üyeleri"
+
+msgid "Last{0} Week ($)"
+msgstr "Geçen{0} Hafta ($)"
+
+msgid "This{0} Week ($)"
+msgstr "Bu{0} Hafta ($)"
+
+msgid "Team{0} Balance ($)"
+msgstr "Takım{0} Bakiye ($)"
+
+msgid "This{0} Week (%)"
+msgstr "Bu{0} Hafta (%)"
+
+msgid "Enter a Gratipay username"
+msgstr ""
+
+msgid "Add"
+msgstr "Ekle"
+
+msgid "You receive {0} per week"
+msgstr ""
+
+msgid "{0} receives {1} per week"
+msgstr ""
+
+msgid "Dollars Received Per Week"
+msgstr ""
+
+msgid "weeks"
+msgstr ""
+
+msgid "Number of Patrons Per Week"
+msgstr ""
+
+msgid "Tips Received, by Number of Tips"
+msgstr ""
+
+msgid "Tips Received, by Dollar Amount"
+msgstr ""
+
+msgid "Button"
+msgstr "Düğme"
+
+msgid "Use this code to embed a Gratipay button on your website:"
+msgstr "Websitenize Gratipay düğmesi gömmek için bu kodu kullanın:"
+
+msgid ""
+"The button opens your profile on Gratipay in a new tab or window. Here's "
+"what the text reads:"
+msgstr "Düğme, Gratipay profilinizi yeni bir sekme veya pencerede açar. Düğme üzerindeki yazıların anlamları:"
+
+msgid "person is not logged into Gratipay or doesn't tip you"
+msgstr "kişi Gratipay oturumu açmamış veya size bahşiş bırakmamış"
+
+msgid "person tips you; shows current gift amount"
+msgstr "kişi size bahşiş bırakmış; mevcut hediye miktarını gösterir"
+
+msgid "your own button"
+msgstr "kendi düğmeniz"
+
+msgid "Here's an example using {0}:"
+msgstr "Kullanımda bir örnek {0}:"
+
+msgid "Badge"
+msgstr "Rozet"
+
+msgid "Use this code to embed a Gratipay badge on your website:"
+msgstr "Websitenize Gratipay rozeti gömmek için bu kodu kullanın:"
+
+msgid "Here's what it looks like:"
+msgstr "İşte böyle gözüküyor:"
+
+msgid "Giving & Receiving Widgets"
+msgstr ""
+
+msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
+msgstr ""
+
+msgid ""
+"Or, if you'd like to include a \"giving\" widget, you can add the {0} "
+"attribute:"
+msgstr ""
+
+msgid "Frequently Asked Questions"
+msgstr ""
+
+msgid "Sign In"
+msgstr ""
+
+msgid "The Delpan Incident"
+msgstr ""
+
+msgid "Fraud Review Dashboard"
+msgstr ""
+
+msgid "There is {n} community on Gratipay."
+msgid_plural "There are {n} communities on Gratipay."
+msgstr[0] "Gratipay'de {n} topluluk var."
+msgstr[1] "Gratipay'de {n} topluluk var."
+
+msgid "Find or add a community ..."
+msgstr "Bir topluluk bul veya ekle ..."
+
+msgid "{n} Member"
+msgid_plural "{n} Members"
+msgstr[0] "{n} Üye"
+msgstr[1] "{n} Üye"
+
+msgid "Popular Communities"
+msgstr ""
+
+msgid "Teams (N={0})"
+msgstr ""
+
+msgid "Team Name"
+msgstr ""
+
+msgid "Receiving ($)"
+msgstr ""
+
+msgid "Goal ($)"
+msgstr ""
+
+#, python-format
+msgid "% Funded"
+msgstr ""
+
+msgid "Receiving{0} Per Member ($)"
+msgstr ""
+
+msgid "Member"
+msgid_plural "Members"
+msgstr[0] "Üye"
+msgstr[1] "Üye"
+
+msgid "Organized {0} ago."
+msgstr ""
+
+msgid "{0} to join the {1} community on Gratipay."
+msgstr ""
+
+msgid "Leave"
+msgstr "Ayrıl"
+
+msgid "Join"
+msgstr "Katıl"
+
+msgid "You're the first one here!"
+msgstr ""
+
+msgid ""
+"Bring the {0} community to Gratipay to find like-minded people to give to."
+msgstr ""
+
+msgid "New Members"
+msgstr "Yeni Üyeler"
+
+msgid "Top Givers"
+msgstr ""
+
+msgid "Anonymous"
+msgstr ""
+
+msgid "Top Receivers"
+msgstr ""
+
+msgid "More"
+msgstr "Daha fazla"
+
+msgid "Please Confirm"
+msgstr ""
+
+msgid "{0} returned an error, please try again later."
+msgstr ""
+
+msgid "A Lot"
+msgstr ""
+
+msgid "Gifts Waiting"
+msgstr ""

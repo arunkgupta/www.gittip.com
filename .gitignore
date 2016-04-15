@@ -1,6 +1,5 @@
 env/
-gittip.egg-info/
-*~
+gratipay.egg-info/
 *.pyc
 local.env
 tests/env
@@ -12,11 +11,13 @@ nosetests.xml
 .noseids
 .deps
 .sass-cache/
-gittip.css
 .vagrant
 node_modules/
 .DS_Store
 docs/_build
-docs/gittip
-docs/gittip.rst
+docs/gratipay
+docs/gratipay.rst
 _vimrc_local.vim
+.transifexrc
+npm-debug.log
+phantomjsdriver.log

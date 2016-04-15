@@ -1,0 +1,3 @@
+[---]
+website.redirect('https://hackerone.com/gratipay', base_url='')
+[---] text/html

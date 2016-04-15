@@ -1,217 +1,164 @@
-"""## Information Architecture
-
-This is where we document all the pages on our website, with their purpose and
-the most important thing on each page.
-
-
-### Homepage
-
-https://www.gittip.com/
-
-This is the homepage. The most important thing is to give a good first
-impression of Gittip and help people take the next step, whatever that might be
-for them.
-
-"""
-import os
-from aspen import Response
-from gittip.utils import _to_age, format_money, to_statement
-
-
-LUXURY = 4  # used for responsive design to limit items shown on small screens
-MAKING = "making the world better by"
-I_AM = "I am"
-WE_ARE = "We are"
-
+from collections import OrderedDict
 [---]
+i18ned_statuses = { "approved": _("Approved")
+                  , "unreviewed" : _("Under Review")
+                  , "rejected": _("Rejected")
+                   }
+status_icons = { "approved": "&#xe008;"
+               , "unreviewed": "&#xe009;"
+               , "rejected": "&#xe010;"
+                }
 
-try:
-    limit = min(int(qs.get('limit', 12)), 100)
-    offset = int(qs.get('offset', 0))
-except ValueError:
-    raise Response(400)
+teams = website.db.all("""
 
-new_participants = website.db.all("""
--- new participants on homepage
+    SELECT teams.*::teams
+      FROM teams
+  ORDER BY ctime DESC
 
-    SELECT username, claimed_time, avatar_url, statement, number
-      FROM participants p
-     WHERE EXISTS (SELECT * FROM elsewhere e WHERE p.username = e.participant)
-       AND claimed_time IS NOT null
-       AND is_suspicious IS NOT true
-  ORDER BY claimed_time DESC
-     LIMIT %s
-    OFFSET %s
+""")
+volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT 1", default=0)
+volume = int(round(volume, -2))
 
-""", (limit, offset))
+tabs = OrderedDict()
+tabs['approved'] = {'teams': []}
+tabs['unreviewed'] = {'teams': []}
+tabs['rejected'] = {'teams': []}
 
-givers = website.db.all("""
--- top givers on homepage
+for team in teams:
+    tabs[team.status]['teams'].append(team)
 
-    SELECT * FROM homepage_top_givers
-  ORDER BY amount DESC
-     LIMIT %s
-    OFFSET %s
+nteams = 0
+for key, tab in tabs.items():
+    n = tab['n'] = len(tab['teams'])
+    nteams += n
+    tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
+                                                                           , status_icons[key]
+                                                                           , i18ned_statuses[key]
+                                                                           , n
+                                                                            )
 
-""", (limit, offset))
-
-# XXX I'm nearly positive that one or both of givers and receivers can contain
-# orphan accounts. See https://github.com/gittip/www.gittip.com/issues/650
-
-receivers = website.db.all("""
--- top receivers on homepage
-
-    SELECT * FROM homepage_top_receivers
-  ORDER BY amount DESC
-     LIMIT %s
-    OFFSET %s
-
-""", (limit, offset))
+title = _("Teams")
+suppress_sidebar = True
+suppress_welcome = 'suppress-welcome' in request.cookie
 [---]
-{% from 'templates/avatar-url.html' import avatar_url with context %}
 {% extends "templates/base.html" %}
+{% block head_early %}
+    {% if website.optimizely_id and request.headers.get('DNT') != '1' %}
+    <script src="//cdn.optimizely.com/js/{{ website.optimizely_id }}.js"></script>
+    {% endif %}
+{% endblock %}
 {% block head %}
-    <link rel="publisher" href="https://plus.google.com/110591317655791133884">
-    <meta name="description" content="Inspiring Generosity. Gittip is a weekly gift exchange. Support and thank your favorite people and projects and communities with small cash gifts." />
+    <link rel="publisher" href="https://plus.google.com/104524895706770139568">
+    <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
+    <meta name="description" content="Voluntary payments and payroll for open work" />
     <meta name="fb:app_id" content="229465400522758" />
     <meta name="og:type" content="website" />
-    <meta name="og:url" content="https://www.gittip.com/" />
-    <meta name="og:title" content="Gittip" />
-    <meta name="og:image" content="{{ website.asset_url }}/gittip.opengraph.png" />
+    <meta name="og:url" content="https://gratipay.com/" />
+    <meta name="og:title" content="Gratipay" />
+    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
 {% endblock %}
+
+{% block banner %}
+    <a href="/about/" class="homepage">
+        {{ _("Payments{br}and Payroll{br}for Open Work", br='<br>'|safe) }}<br>
+        <u>{{ _("Read more") }}&hellip;</u>
+    </a>
+</a>
+{% endblock %}
+
+{% block content %}
+{% if not suppress_welcome %}
+<div class="welcome">
+    <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
+    <p>{{ _( "We have {nteams} Teams receiving and sharing about {volume} each week."
+           , nteams=tabs['approved']['n']
+           , volume=format_currency(volume, 'USD', trailing_zeroes=False)
+            ) }}</p>
+    <p>{{ _( "Continue to explore our Teams, or {a}read more about us{_a}."
+           , a='<a href="/about/">'|safe
+           , _a='</a>'|safe
+            ) }}</p>
+    <div class="continue">
+        <button>{{ _("Continue") }}</button>
+    </div>
+</div>
+{% endif %}
+
+<form action="new" class="apply">
+    <button type="submit">{{ _("Apply for a New Team") }}</button>
+</form>
+
+<div class="tabs">
+    <ul class="nav" id="tab-nav">
+        {% for tab in tabs %}
+        <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name']|safe }}</a></li>
+        {% endfor %}
+    </ul>
+
+    {% for tab in tabs %}
+    <table class="teams tab" data-tab="{{ tab }}">
+        {% for i, team in enumerate(tabs[tab]['teams'], start=1) %}
+        <tr>
+            <td class="team">
+                <img src="{{ team.get_image_url('small') }}">
+                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+
+                <div class="details">
+                    <span class="i">{{ i }}</span>
+                    <span class="status">&middot;
+                        <a href="{{ team.review_url }}"><span
+                            class="status-icon {{ team.status }}"
+                            >{{ status_icons[team.status]|safe }}</span
+                            >{{ i18ned_statuses[team.status] }}</a>
+                    </span>
+                    <span class="ctime">&middot; {{ _("created {ago}",
+                        ago=to_age(team.ctime, add_direction=True)) }}</span>
+                    <span class="owner">&middot;
+                        {{ _( "owned by {a}{owner}{_a}"
+                            , owner='~'+team.owner
+                            , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
+                            , _a='</a>'|safe
+                             ) }}
+                    </span>
+                </div>
+
+                {% if team.status == 'approved' %}
+                <table class="numbers mono">
+                    <tr>
+                        <th class="label">{{ _("Weekly") }}</th>
+                        <th>&#x03A3; &nbsp;</th>
+                        <th>n</th>
+                    </tr>
+                    <tr>
+                        <td class="label">{{ _("Receiving") }}</td>
+                        <td>{{ format_currency(team.receiving, 'USD')
+                                if team.receiving else '- &nbsp;'|safe }}</td>
+                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">{{ _("Sharing") }}</td>
+                        <td>- &nbsp;</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+</div>
+{% endblock %}
+
 
 {% block scripts %}
 <script>
     $(document).ready(function () {
-        $("a.mini-user:not([data-tip=''])").tipr();
-        Gittip.jump.init();
+        $('.welcome button').click(function() {
+            console.log('suppressing welcome ...');
+            document.cookie = 'suppress-welcome=';
+            $(this).parent().parent().fadeOut(100);
+        });
     });
 </script>
-{{ super() }}
-{% endblock %}
-
-{% block heading %}
-    <h2 class="top"><span>Sustainable Crowdfunding</span></h2>
-    <h1>
-        <span>Inspiring Generosity</span>
-    </h1>
-    <h2 class="bottom">
-        <span class="button-container">
-            <a href="/about/"><button class="selected">About</button></a>
-        </span>
-    </h2>
-{% endblock %}
-{% block box %}
-    <div class="as-content">
-        <h1>Who inspires you?</h1>
-        <form id="jump">
-            <span class="luxury">Enter a </span>
-            <select>
-                <option value="twitter">Twitter</option>
-                <option value="github">GitHub</option>
-                <option value="bitbucket">Bitbucket</option>
-            </select>
-            <span class="luxury"> username: </span>
-            <input placeholder="username" autocomplete="off" autocorrect="off"
-                autocapitalize="off" spellcheck="false"/>
-            <button type="submit">Go</button>
-        </form>
-    </div>
-
-    <div class="nav level-1">Or browse <a
-            href="/for/">communities on Gittip ...</a></div>
-
-{% endblock %}
-{% block page %}
-
-<div id="leaderboard">
-
-    <div class="people">
-        <h2>New Participants</h2>
-        <ul class="group">
-            {% for i, participant in enumerate(new_participants, start=1) %}
-            <li{% if i > LUXURY %} class="luxury"{% endif %}>
-                <a href="/{{ participant.username }}/"
-                    class="mini-user tip"
-                    data-tip="{{ to_statement((I_AM if participant.number == 'singular' else WE_ARE) + ' ' + MAKING + ' ',
-                    participant.statement) }}">
-                    <span class="inner">
-                        <span class="avatar"
-                            style="background-image: url('{{ avatar_url(participant) }}')">
-                        </span>
-                        <span class="age">{{ _to_age(participant) }}</span>
-                        <span class="name">{{ participant.username }}</span>
-                    </span>
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="people">
-        <h2>Top Givers</h2>
-        <ul class="group">
-            {% for i, giver in enumerate(givers, start=1) %}
-            <li{% if i > LUXURY %} class="luxury"{% endif %}>
-                {% if giver.anonymous and not user.ADMIN %}
-                <span class="mini-user">
-                    <span class="inner">
-                        <span class="avatar">
-                        </span>
-                        <span class="money">${{ format_money(giver.amount) }}</span>
-                        <span class="name">Anonymous</span>
-                    </span>
-                </span>
-                {% else %}
-                <a href="/{{ giver.username }}/"
-                   class="mini-user{{ ' anonymous' if giver.anonymous else '' }} tip"
-                   data-tip="{{ to_statement((I_AM if giver.number == 'singular' else WE_ARE) + ' ' + MAKING + ' ',
-                   giver.statement) }}">
-                    <span class="inner">
-                        <span class="avatar"
-                            style="background-image: url('{{ avatar_url(giver) }}')">
-                        </span>
-                        <span class="money">${{ format_money(giver.amount) }}</span>
-                        <span class="name">{{ giver.username }}</span>
-                    </span>
-                </a>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="people">
-        <h2>Top Receivers</h2>
-        <ul class="group">
-            {% for i, receiver in enumerate(receivers, start=1) %}
-            <li{% if i > LUXURY %} class="luxury"{% endif %}>
-                {% if receiver.anonymous and not user.ADMIN %}
-                <span class="mini-user">
-                    <span class="inner">
-                        <span class="avatar">
-                        </span>
-                        <span class="money">${{ format_money(receiver.amount) }}</span>
-                        <span class="name">Anonymous</span>
-                    </span>
-                </span>
-                {% else %}
-                <a href="/{{ receiver.username }}/"
-                   class="mini-user{{ ' anonymous' if receiver.anonymous else '' }} tip"
-                   data-tip="{{ to_statement((I_AM if receiver.number == 'singular' else WE_ARE) + ' ' + MAKING + ' ',
-                   receiver.statement) }}">
-                    <span class="inner">
-                        <span class="avatar"
-                            style="background-image: url('{{ avatar_url(receiver) }}')">
-                        </span>
-                        <span class="money">${{ format_money(receiver.amount) }}</span>
-                        <span class="name">{{ receiver.username }}</span>
-                    </span>
-                </a>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-</div>
-
 {% endblock %}

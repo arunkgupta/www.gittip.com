@@ -1,42 +1,21 @@
 #!/bin/sh
 
-# Fail on error.
-# ==============
 
+# Fail on error
 set -e
 
 
-# Be somewhere predictable.
-# =========================
-
+# Be somewhere predictable
 cd "`dirname $0`"
 
 
-# --help
-# ======
-
-if [ $# = 0 ]; then
-    echo
-    echo "Usage: $0 <version>"
-    echo
-    echo "  This is a release script for Gittip. We bump the version number in "
-    echo "  www/version.txt and then do a git dance, pushing to Heroku."
-    echo
-    exit
-fi
-
-
 # Helpers
-# =======
 
-confirm () {
+yesno () {
     proceed=""
     while [ "$proceed" != "y" ]; do
-        read -p"$1 (y/N) " proceed
-        if [ "$proceed" = "n" -o "$proceed" = "N" -o "$proceed" = "" ]
-        then
-            return 1
-        fi
+        read -p"$1 (y/n) " proceed
+        [ "$proceed" = "n" ] && return 1
     done
     return 0
 }
@@ -44,74 +23,92 @@ confirm () {
 require () {
     if [ ! `which $1` ]; then
         echo "The '$1' command was not found."
-        return 1
+        exit 1
     fi
-    return 0
 }
 
 
-# Work
-# ====
+# Check that we have the required tools
+require heroku
+require git
 
-if [ $1 ]; then
 
-    require git
-    if [ $? -eq 1 ]; then
-        exit
+# Make sure we have the latest master
+if [ "`git rev-parse --abbrev-ref HEAD`" != "master" ]; then
+    echo "Not on master, checkout master first."
+    exit
+fi
+git pull
+
+
+# Compute the next version number
+prev="$(git describe --tags --match '[0-9]*' | cut -d- -f1 | sed 's/\.//g')"
+version="$((prev + 1))"
+
+
+# Check that the environment contains all required variables
+heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin \
+    ./env/bin/python gratipay/wireup.py
+
+
+# Sync the translations
+echo "Syncing translations..."
+if [ ! -e .transifexrc -a ! -e ~/.transifexrc ]; then
+    heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin make transifexrc
+fi
+make i18n_upload
+make i18n_download
+git add i18n
+if git commit --dry-run &>/dev/null; then git commit -m "update i18n files"; fi
+
+
+# Check for a branch.sql
+if [ -e sql/branch.sql ]; then
+    # Merge branch.sql into schema.sql
+    git rm --cached sql/branch.sql
+    echo | cat sql/branch.sql >>sql/schema.sql
+    echo "sql/branch.sql has been appended to sql/schema.sql"
+    read -p "Please make the necessary manual modifications to schema.sql now, then press Enter to continue... " enter
+    git add sql/schema.sql
+    git commit -m "merge branch.sql into schema.sql"
+
+    # Deployment options
+    if yesno "Should branch.sql be applied before deploying to Heroku instead of after?"; then
+        run_sql="before"
+        if yesno "Should the maintenance mode be turned on during deployment?"; then
+            maintenance="yes"
+        fi
+    else
+        run_sql="after"
     fi
-
-    if [ "`git rev-parse --abbrev-ref HEAD`" != "master" ]; then
-        echo "Not on master, checkout master first."
-        exit
-    fi
-
-    # Make sure we have the latest master.
-    # ====================================
-
-    git pull
-
-    if [ "`git tag | grep $1`" ]; then
-        echo "Version $1 is already git tagged."
-        exit
-    fi
-
-    if ! grep -e \-dev$ www/version.txt > /dev/null; then
-        echo "Current version does not end with '-dev'."
-        exit
-    fi
-
-    confirm "Tag and push version $1?"
-    if [ $? -eq 0 ]; then
-
-        # Bump the version.
-        # =================
-
-        printf "$1\n" > www/version.txt
-        git commit www/version.txt -m"Bump version to $1"
-        git tag $1
+fi
 
 
-        # Deploy to Heroku.
-        # =================
-
-        git push heroku master
-
-
-        # Bump the version again.
-        # =======================
-        # We're using a Pythonic convention here by using -dev to mean, "a
-        # dev version following $whatever." We escape the dash for bash's
-        # sake
-
-        printf "$1\055dev\n" > www/version.txt
-        git commit www/version.txt -m"Bump version to $1-dev"
+# Ask confirmation and bump the version
+yesno "Tag and deploy version $version?" || exit
+echo $version >www/version.txt
+git commit www/version.txt -m "Bump version to $version"
+git tag $version
 
 
-        # Push to GitHub.
-        # ===============
+# Deploy to Heroku
+[ "$maintenance" = "yes" ] && heroku maintenance:on -a gratipay
+[ "$run_sql" = "before" ] && heroku pg:psql -a gratipay <sql/branch.sql
+git push --force heroku master
+[ "$maintenance" = "yes" ] && heroku maintenance:off -a gratipay
+[ "$run_sql" = "after" ] && heroku pg:psql -a gratipay <sql/branch.sql
+rm -f sql/branch.sql
 
-        git push
-        git push --tags
 
+# Push to GitHub
+git push
+git push --tags
+
+
+# Check for schema drift
+if [[ $run_sql ]]; then
+    if ! make schema-diff; then
+        echo "schema.sql doesn't match the production DB, please fix it"
+        exit 1
     fi
 fi

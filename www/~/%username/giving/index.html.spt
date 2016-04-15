@@ -1,0 +1,77 @@
+from aspen.utils import utcnow
+from gratipay.utils import get_participant
+from datetime import timedelta
+
+[-----------------------------------------------------------------------------]
+
+participant = get_participant(state, restrict=True)
+giving, totals = participant.get_giving_for_profile()
+banner = '~' + participant.username
+title = _("Giving")
+recently = utcnow() - timedelta(days=30)
+cancelled_giving = [x for x in giving if x.amount == 0 and x.mtime >= recently]
+
+# don't filter until after cancelled are looked at
+giving = [s for s in giving if s.amount > 0]
+
+
+tabs = [
+    {
+        'tab_name': 'active',
+        'giving': giving,
+        'ngiving': len(giving),
+        'name': _("Active"),
+        'note': None,
+        'totals': totals
+    },
+    {
+        'tab_name': 'cancelled',
+        'giving': cancelled_giving,
+        'ngiving': len(cancelled_giving),
+        'name': _("Cancelled"),
+        'note': _("These are payments that you recently cancelled."),
+        'totals': {}
+    }
+]
+
+[-----------------------------------------------------------------------------]
+{% from 'templates/giving-table.html' import giving_table with context %}
+
+{% extends "templates/profile.html" %}
+
+{% block content %}
+
+<div class="tabs">
+
+<ul class="nav" id="tab-nav">
+    {% for tab in tabs %}
+    <li>
+        <a href="#"
+           data-tab="{{ tab.tab_name }}"
+           title="{{ tab.note or '' }}">
+            {{ tab.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% for tab in tabs %}
+    <div class='tab' data-tab='{{ tab.tab_name }}'>
+    {% if tab.ngiving %}
+
+        {% if tab.note %}
+            <p class="note">{{ tab.note }}</p>
+        {% endif %}
+
+        {{ giving_table(tab.tab_name, tab.giving, tab.totals) }}
+
+    {% else %}
+
+        <p>{{ _("No results to show") }}</p>
+
+    {% endif %}
+    </div>
+{% endfor %}
+
+</div>
+{% endblock %}

@@ -1,1 +1,1 @@
-web: aspen --network_address :$PORT --www_root www/ --project_root .
+web: gunicorn gratipay.main:website --bind :$PORT $GUNICORN_OPTS

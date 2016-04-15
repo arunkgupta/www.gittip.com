@@ -1,48 +1,42 @@
 from aspen import Response
 
-[---]
-
-platform = getattr(website.platforms, path['platform'], None)
-if platform is None:
-    raise Response(404)
-
-if not path['user_name']:
-    raise Response(400, '%user_name is empty')
-
-try:
-    action = qs['action']
-except KeyError:
-    raise Response(400)
-
-team = qs.get('team', '').lower() == 'true'
+from gratipay.models.account_elsewhere import get_account_elsewhere
 
 [---]
 
+platform, account = get_account_elsewhere(website, state, api_lookup=False)
+name = account.friendly_name
+
+team = request.qs.get('team', '').lower() == 'true'
+
+title = _("Failure")
+
+[---]
 {% extends "templates/base.html" %}
-{% block heading %}<h2 class="top"><span>Failure</span></h2>{% endblock %}
-{% block box %}
-
-<div class="as-content">
+{% block content %}
 
     {% if team %}
 
-    <h1>Are you really an administrator of the {{ path['user_name']|e }} team?</h1>
+    <h2>{{ _("Are you really an administrator of the {0} team?", name) }}</h2>
 
-    <p>Your attempt to {{ action|e }} this account failed because you're
-    logged into {{ platform.display_name }} as someone who isn't an
-    administrator of the {{ path['user_name']|e }} team. Please sign out
-    and <a href="./">try again</a>.</p>
+    <p>{{ _("Your attempt to claim this account failed because you're logged "
+            "into {0} as someone who isn't an administrator of the {1} team. "
+            "Please sign out and {2}try again{3}.",
+            platform.display_name,
+            name,
+            '<a href="./">'|safe,
+            '</a>'|safe) }}</p>
 
     {% else %}
 
-    <h1>Are you really {{ path['user_name']|e }}?</h1>
+    <h2>{{ _("Are you really {0}?", name) }}</h2>
 
-    <p>Your attempt to {{ action|e }} this account failed because you're
-    logged into {{ platform.display_name }} as someone else. Please sign out
-    and <a href="./">try again</a>.</p>
+    <p>{{ _("Your attempt to claim this account failed because you're logged "
+            "into {0} as someone else. Please sign out and {1}try again{2}.",
+            platform.display_name,
+            '<a href="./">'|safe,
+            '</a>'|safe) }}</p>
 
     {% endif %}
-
-</div>
 
 {% endblock %}
